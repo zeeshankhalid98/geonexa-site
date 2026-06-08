@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Command winget -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command choco -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command scoop -ErrorAction SilentlyContinue)",
+      "PowerShell(winget install --id GitHub.cli -e --accept-source-agreements --accept-package-agreements)",
+      "PowerShell($env:Path += \";C:\\\\Program Files\\\\GitHub CLI\"; gh --version; gh auth status 2>&1)",
+      "PowerShell($gh = \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\"; & $gh auth status; git config --global user.name; git config --global user.email)",
+      "Bash(cp \"GeoNexa coding.html\" \"index.html\")",
+      "Read(//c/c/Users/HP/Desktop/**)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://zeeshankhalid98.github.io/geonexa-site/)"
+    ]
+  }
+}
