@@ -1,0 +1,2864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEONEXA</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+/* ============================================================
+   GEONEXA - Complete CSS
+   Theme: White background · Dark Navy Blue · Aqua Green
+   ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* ---- CORE PALETTE ---- */
+  --navy:       #0d2137;   /* dark navy blue — topbar, nav, headings */
+  --navy2:      #133150;   /* medium navy — secondary surfaces        */
+  --navy3:      #1a4068;   /* lighter navy — stat cards, table headers*/
+  --navy4:      #1e5080;   /* hover navy                              */
+  --aqua:       #00c9a7;   /* aqua green — primary accent             */
+  --aqua2:      #00b896;   /* aqua hover                              */
+  --aqua-light: #e6faf7;   /* aqua tint background                    */
+  --aqua-mid:   #b3f0e6;   /* aqua mid for chips                      */
+
+  /* ---- BACKGROUND (white-based) ---- */
+  --bg:         #f4f7fa;   /* page background — soft white            */
+  --bg2:        #ffffff;   /* card/surface white                      */
+  --bg3:        #eef2f7;   /* input / subtle surface                  */
+  --bg4:        #dde4ed;   /* hover surface                           */
+
+  /* ---- TEXT ---- */
+  --text:       #0d2137;   /* primary text — navy                     */
+  --text2:      #3a5a7a;   /* secondary text                          */
+  --text3:      #7a9bb8;   /* muted / placeholder                     */
+
+  /* ---- BORDERS ---- */
+  --border:     #cdd9e8;   /* default border                          */
+  --border2:    #b0c4d8;   /* stronger border                         */
+
+  /* ---- ACCENT COLORS ---- */
+  --accent:     #0d2137;   /* navy — primary buttons                  */
+  --accent2:    #00c9a7;   /* aqua — success / results                */
+  --accent3:    #f59e0b;   /* amber — warnings                        */
+  --accent4:    #ef4444;   /* red — errors / danger                   */
+
+  /* ---- CARD ---- */
+  --card:       #ffffff;
+
+  /* ---- RADIUS ---- */
+  --radius:     12px;
+  --radius2:    7px;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:14px;
+  min-height:100vh;
+}
+#app{display:flex;flex-direction:column;min-height:100vh}
+
+/* ---- TOP BAR ---- */
+.topbar{
+  background:var(--navy);
+  border-bottom:3px solid var(--aqua);
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:sticky;
+  top:0;
+  z-index:200;
+  box-shadow:0 2px 16px rgba(13,33,55,0.18);
+}
+.logo{font-size:22px;font-weight:800;color:#ffffff;letter-spacing:1px}
+.logo span{color:var(--aqua)}
+.logo-sub{font-size:11px;color:rgba(255,255,255,0.55);margin-top:1px;letter-spacing:0.3px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.badge{background:var(--aqua);color:var(--navy);font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700}
+
+/* ---- NAV ---- */
+.nav{
+  background:var(--navy2);
+  border-bottom:1px solid rgba(0,201,167,0.2);
+  display:flex;
+  overflow-x:auto;
+  gap:2px;
+  padding:0 8px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--navy3) transparent;
+}
+.nav::-webkit-scrollbar{height:3px}
+.nav::-webkit-scrollbar-thumb{background:var(--navy3);border-radius:3px}
+.nav-btn{
+  padding:10px 14px;
+  font-size:13px;
+  color:rgba(255,255,255,0.6);
+  background:none;
+  border:none;
+  cursor:pointer;
+  white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:all 0.15s;
+  font-weight:500;
+}
+.nav-btn:hover{color:#fff;background:rgba(0,201,167,0.08)}
+.nav-btn.active{color:var(--aqua);border-bottom-color:var(--aqua);font-weight:700}
+
+/* ---- MAIN CONTENT ---- */
+.main{flex:1;padding:16px;max-width:1200px;margin:0 auto;width:100%}
+
+/* ---- CARDS ---- */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 1px 6px rgba(13,33,55,0.07);
+}
+.card-title{
+  font-size:15px;
+  font-weight:700;
+  margin-bottom:14px;
+  color:var(--navy);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* ---- GRID SYSTEM ---- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:600px){
+  .grid2,.grid3,.grid4{grid-template-columns:1fr}
+}
+@media(max-width:800px){
+  .grid3,.grid4{grid-template-columns:1fr 1fr}
+}
+
+/* ---- STAT CARDS ---- */
+.stat-card{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  border-radius:var(--radius2);
+  padding:18px;
+  text-align:center;
+  border:1px solid rgba(0,201,167,0.2);
+  box-shadow:0 2px 10px rgba(13,33,55,0.12);
+}
+.stat-val{font-size:28px;font-weight:800;color:var(--aqua)}
+.stat-lbl{font-size:12px;color:rgba(255,255,255,0.6);margin-top:5px;font-weight:500}
+
+/* ---- BUTTONS ---- */
+.btn{
+  padding:8px 16px;
+  border:none;
+  border-radius:var(--radius2);
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
+  transition:all 0.15s;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:var(--navy2)}
+.btn-success{background:var(--aqua);color:var(--navy)}
+.btn-success:hover{background:var(--aqua2)}
+.btn-warning{background:var(--accent3);color:#fff}
+.btn-warning:hover{background:#d97706}
+.btn-danger{background:var(--accent4);color:#fff}
+.btn-danger:hover{background:#dc2626}
+.btn-ghost{background:var(--bg3);color:var(--navy);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg4)}
+.btn-sm{padding:5px 10px;font-size:12px}
+
+/* ---- FORM INPUTS ---- */
+.inp{
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius2);
+  padding:8px 12px;
+  color:var(--text);
+  font-size:13px;
+  width:100%;
+  outline:none;
+  transition:border-color 0.15s, box-shadow 0.15s;
+  font-family:inherit;
+}
+.inp:focus{border-color:var(--aqua);box-shadow:0 0 0 3px rgba(0,201,167,0.12)}
+.inp::placeholder{color:var(--text3)}
+select.inp{cursor:pointer}
+textarea.inp{resize:vertical;min-height:80px}
+.label{font-size:12px;color:var(--text2);margin-bottom:4px;display:block;font-weight:600}
+.field{margin-bottom:10px}
+
+/* ---- TABLES ---- */
+.table-wrap{overflow-x:auto;border-radius:var(--radius2);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{
+  background:var(--navy);
+  padding:10px 12px;
+  text-align:left;
+  font-weight:700;
+  color:rgba(255,255,255,0.85);
+  font-size:12px;
+  border-bottom:2px solid var(--aqua);
+  white-space:nowrap;
+}
+td{
+  padding:9px 12px;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+  background:#fff;
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--aqua-light)}
+
+/* ---- RESULT BOXES ---- */
+.result-box{
+  background:var(--navy);
+  border-radius:var(--radius2);
+  padding:16px;
+  margin-top:12px;
+  border:1px solid rgba(0,201,167,0.25);
+  box-shadow:0 2px 8px rgba(13,33,55,0.1);
+}
+.result-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:13px;
+  color:rgba(255,255,255,0.75);
+}
+.result-row:last-child{border-bottom:none}
+.result-val{font-weight:700;color:var(--aqua);font-family:monospace}
+
+/* ---- TABS ---- */
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tab{
+  padding:7px 16px;
+  border-radius:var(--radius2);
+  font-size:13px;
+  cursor:pointer;
+  background:#fff;
+  color:var(--text2);
+  border:1.5px solid var(--border);
+  transition:all 0.15s;
+  font-weight:500;
+}
+.tab:hover{color:var(--navy);background:var(--aqua-light);border-color:var(--aqua)}
+.tab.active{background:var(--navy);color:#fff;font-weight:700;border-color:var(--navy)}
+
+/* ---- ALERT BOXES ---- */
+.warn-box{
+  background:#fff5f5;
+  border:1.5px solid #fecaca;
+  border-left:4px solid var(--accent4);
+  border-radius:var(--radius2);
+  padding:10px 14px;
+  margin-top:8px;
+  font-size:13px;
+  color:#b91c1c;
+}
+.caution-box{
+  background:#fffbeb;
+  border:1.5px solid #fde68a;
+  border-left:4px solid var(--accent3);
+  border-radius:var(--radius2);
+  padding:10px 14px;
+  margin-top:8px;
+  font-size:13px;
+  color:#92400e;
+}
+.info-box{
+  background:#eff8ff;
+  border:1.5px solid #bae3ff;
+  border-left:4px solid #3b9edd;
+  border-radius:var(--radius2);
+  padding:10px 14px;
+  margin-top:8px;
+  font-size:13px;
+  color:#0d5fa5;
+}
+.success-box{
+  background:var(--aqua-light);
+  border:1.5px solid var(--aqua-mid);
+  border-left:4px solid var(--aqua);
+  border-radius:var(--radius2);
+  padding:10px 14px;
+  margin-top:8px;
+  font-size:13px;
+  color:#006b58;
+}
+
+/* ---- MISC ---- */
+.flex{display:flex;gap:8px;align-items:center}
+.flex-end{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.text-muted{color:var(--text2)}
+.text-accent{color:var(--navy)}
+.text-success{color:#007d64}
+.text-warning{color:#b45309}
+.text-danger{color:#b91c1c}
+.font-bold{font-weight:700}
+.font-mono{font-family:monospace}
+
+/* ---- CHIPS ---- */
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:2px 8px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+}
+.chip-blue{background:#dbeafe;color:#1e40af}
+.chip-green{background:var(--aqua-light);color:#065f46}
+.chip-red{background:#fee2e2;color:#991b1b}
+.chip-amber{background:#fef3c7;color:#92400e}
+.chip-purple{background:#ede9fe;color:#5b21b6}
+
+/* ---- QUICK BUTTONS (Dashboard) ---- */
+.quick-btn{
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 12px;
+  cursor:pointer;
+  text-align:center;
+  transition:all 0.2s;
+  color:var(--navy);
+  box-shadow:0 1px 4px rgba(13,33,55,0.06);
+}
+.quick-btn:hover{
+  background:var(--aqua-light);
+  border-color:var(--aqua);
+  transform:translateY(-2px);
+  box-shadow:0 4px 14px rgba(0,201,167,0.15);
+}
+.quick-btn .qb-icon{font-size:26px;margin-bottom:8px}
+.quick-btn .qb-lbl{font-size:12px;color:var(--text2);font-weight:600}
+
+/* ---- MAP ---- */
+#map-container{
+  height:450px;
+  border-radius:var(--radius2);
+  overflow:hidden;
+  border:1.5px solid var(--border);
+}
+
+/* ---- CANVAS ---- */
+canvas#plotCanvas{
+  background:#f8fbfe;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius2);
+  display:block;
+}
+
+/* ---- TOAST NOTIFICATION ---- */
+.toast{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  background:var(--navy);
+  color:#fff;
+  border:1px solid rgba(0,201,167,0.4);
+  border-radius:var(--radius);
+  padding:12px 18px;
+  font-size:13px;
+  z-index:9999;
+  transform:translateY(80px);
+  opacity:0;
+  transition:all 0.3s cubic-bezier(.175,.885,.32,1.275);
+  max-width:320px;
+  box-shadow:0 8px 32px rgba(13,33,55,0.25);
+}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ---- FORMULA BOX ---- */
+.formula-box{
+  background:var(--navy);
+  border:1px solid rgba(0,201,167,0.25);
+  border-left:4px solid var(--aqua);
+  border-radius:var(--radius2);
+  padding:10px 14px;
+  margin:10px 0;
+  font-family:monospace;
+  font-size:12px;
+  color:rgba(255,255,255,0.75);
+}
+
+/* ---- SECTION HEADER ---- */
+.section-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+.section-icon{
+  width:36px;
+  height:36px;
+  border-radius:8px;
+  background:var(--aqua-light);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  border:1px solid var(--aqua-mid);
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div>
+      <div class="logo">GEO<span>NEXA</span></div>
+      <div class="logo-sub">Professional Land Surveying Application</div>
+    </div>
+    <div class="topbar-right">
+      <span class="badge" id="offline-badge">● OFFLINE READY</span>
+      <span id="projBadge" class="chip chip-green" style="font-size:12px"></span>
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="nav" id="mainNav"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main" id="mainContent"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   GEONEXA - Complete JavaScript
+   All modules: Coordinates, Distance, Area, Leveling (HI, Rise&Fall, Least Squares),
+   Traverse, Unit Converter, Map, Plot, Export, AI Check, Weather, Team
+   Uses localStorage for offline persistence
+   ============================================================ */
+
+// ============================================================
+// LOCAL STORAGE HELPERS
+// ============================================================
+const LS = {
+  get: (k) => {
+    try { return JSON.parse(localStorage.getItem('gsp_' + k) || 'null'); }
+    catch(e) { return null; }
+  },
+  set: (k, v) => localStorage.setItem('gsp_' + k, JSON.stringify(v)),
+};
+
+// ============================================================
+// APPLICATION STATE
+// ============================================================
+let state = {
+  page: 'dashboard',
+  levPage: 'hi',       // Active leveling tab: 'hi' | 'rf' | 'ls'
+  distMode: 'manual',  // Distance calculator mode
+  currentProject: LS.get('currentProject') || 'Field Survey 2024',
+
+  // Saved survey points
+  points: LS.get('points') || [],
+
+  // HI Method leveling rows
+  hiRows: LS.get('hiRows') || [],
+
+  // Rise and Fall Method rows
+  rfRows: LS.get('rfRows') || [],
+
+  // Least Squares leveling observations
+  lsRows: LS.get('lsRows') || [],
+
+  // Traverse stations
+  traverseRows: LS.get('traverseRows') || [],
+
+  // Area polygon points
+  areaPoints: LS.get('areaPoints') || [],
+
+  // Team data
+  teamMembers: LS.get('teamMembers') || [
+    {name:'Ahmed Ali',   role:'Admin',    status:'online'},
+    {name:'Sara Khan',   role:'Surveyor', status:'offline'},
+    {name:'Bilal Raza',  role:'Viewer',   status:'online'},
+  ],
+  teamNotes: LS.get('teamNotes') || '',
+  teamTasks: LS.get('teamTasks') || [
+    {text:'Collect traverse points',        done:true},
+    {text:'Measure RL at bench mark',       done:false},
+    {text:'Submit leveling report',         done:false},
+    {text:'Verify area polygon closure',    done:false},
+  ],
+};
+
+// Save all state to localStorage
+function saveState() {
+  LS.set('currentProject', state.currentProject);
+  LS.set('points',         state.points);
+  LS.set('hiRows',         state.hiRows);
+  LS.set('rfRows',         state.rfRows);
+  LS.set('lsRows',         state.lsRows);
+  LS.set('traverseRows',   state.traverseRows);
+  LS.set('areaPoints',     state.areaPoints);
+  LS.set('teamMembers',    state.teamMembers);
+  LS.set('teamNotes',      state.teamNotes);
+  LS.set('teamTasks',      state.teamTasks);
+}
+
+// ============================================================
+// TOAST NOTIFICATIONS
+// ============================================================
+function toast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  const colors = {
+    success: 'var(--accent2)',
+    error:   'var(--accent4)',
+    warn:    'var(--accent3)',
+    info:    'var(--accent)',
+  };
+  el.style.borderColor = colors[type] || colors.info;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ============================================================
+// NAVIGATION PAGES
+// ============================================================
+const PAGES = [
+  {id:'dashboard',   label:'📊 Dashboard'},
+  {id:'coordinates', label:'📍 Coordinates'},
+  {id:'distance',    label:'📏 Distance'},
+  {id:'area',        label:'🗺️ Area'},
+  {id:'leveling',    label:'📐 Leveling/RL'},
+  {id:'traverse',    label:'🔄 Traverse'},
+  {id:'converter',   label:'⚖️ Units'},
+  {id:'map',         label:'🗾 Map View'},
+  {id:'plot',        label:'✏️ Plot'},
+  {id:'export',      label:'📤 Export'},
+  {id:'aicheck',     label:'🤖 AI Check'},
+  {id:'weather',     label:'🌤️ Weather'},
+  {id:'team',        label:'👥 Team'},
+  {id:'contour',     label:'🏔️ Contour'},
+];
+
+function renderNav() {
+  const nav = document.getElementById('mainNav');
+  nav.innerHTML = PAGES.map(p =>
+    `<button class="nav-btn ${state.page === p.id ? 'active' : ''}"
+      onclick="navigate('${p.id}')">${p.label}</button>`
+  ).join('');
+
+  // Update project badge
+  const pb = document.getElementById('projBadge');
+  if(pb) pb.textContent = '● ' + state.currentProject;
+}
+
+function navigate(page) {
+  state.page = page;
+  renderNav();
+  renderPage();
+  window.scrollTo(0, 0);
+}
+
+// Main page router
+function renderPage() {
+  const map = {
+    dashboard:   renderDashboard,
+    coordinates: renderCoordinates,
+    distance:    renderDistance,
+    area:        renderArea,
+    leveling:    renderLeveling,
+    traverse:    renderTraverse,
+    converter:   renderConverter,
+    map:         renderMap,
+    plot:        renderPlot,
+    export:      renderExport,
+    aicheck:     renderAICheck,
+    weather:     renderWeather,
+    team:        renderTeam,
+    contour:     renderContour,
+  };
+  document.getElementById('mainContent').innerHTML = '';
+  (map[state.page] || renderDashboard)();
+}
+
+// ============================================================
+// 1. DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const c = document.getElementById('mainContent');
+  const lastPt = state.points.length
+    ? state.points[state.points.length - 1].name
+    : 'None';
+
+  c.innerHTML = `
+  <!-- HERO -->
+  <div class="card" style="background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);border-color:var(--aqua)">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="font-size:42px">🛰️</div>
+      <div>
+        <div style="font-size:22px;font-weight:700;color:var(--aqua)">GEONEXA</div>
+        <div style="font-size:13px;color:var(--text2);margin-top:2px">Professional Geological Engineering & Land Surveying Application</div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="chip chip-green">✅ Offline Ready</span>
+          <span class="chip chip-blue">📍 GPS Enabled</span>
+          <span class="chip chip-amber">📐 Least Squares</span>
+          <span class="chip chip-purple">🗾 OpenStreetMap</span>
+        </div>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-size:11px;color:var(--text3)">Current Project</div>
+        <input class="inp" id="projName" value="${state.currentProject}"
+          style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1);margin-top:4px;width:200px"
+          oninput="state.currentProject=this.value;saveState();renderNav()">
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="grid4">
+    <div class="stat-card">
+      <div class="stat-val">${state.points.length}</div>
+      <div class="stat-lbl">📍 Survey Points</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--accent2)">${state.hiRows.length + state.rfRows.length + state.lsRows.length}</div>
+      <div class="stat-lbl">📐 RL Records</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--accent3)">${state.traverseRows.length}</div>
+      <div class="stat-lbl">🔄 Traverse Stations</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--accent4);font-size:18px">${lastPt}</div>
+      <div class="stat-lbl">Last Point Saved</div>
+    </div>
+  </div>
+
+  <!-- QUICK ACCESS -->
+  <div class="card">
+    <div class="card-title">⚡ Quick Access</div>
+    <div class="grid4">
+      ${[
+        ['coordinates','📍','Coordinate System'],
+        ['distance',   '📏','Distance Calc'],
+        ['area',       '🗺️','Area Calculator'],
+        ['leveling',   '📐','RL / Leveling'],
+        ['traverse',   '🔄','Traverse Survey'],
+        ['map',        '🗾','Map View'],
+        ['aicheck',    '🤖','AI Survey Check'],
+        ['export',     '📤','Export Data'],
+      ].map(([id,ic,lb]) => `
+      <div class="quick-btn" onclick="navigate('${id}')">
+        <div class="qb-icon">${ic}</div>
+        <div class="qb-lbl">${lb}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- RECENT POINTS + PROJECT SUMMARY -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">📍 Recent Survey Points</div>
+      ${state.points.length === 0
+        ? '<div class="text-muted" style="font-size:13px;padding:8px 0">No points saved yet. Go to Coordinates to add points.</div>'
+        : `<div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Easting</th><th>Northing</th><th>RL</th></tr></thead>
+          <tbody>
+          ${state.points.slice(-6).reverse().map(p =>
+            `<tr>
+              <td><b>${p.name}</b></td>
+              <td class="font-mono">${p.easting || '-'}</td>
+              <td class="font-mono">${p.northing || '-'}</td>
+              <td class="font-mono text-success">${p.rl || '-'}</td>
+            </tr>`
+          ).join('')}
+          </tbody></table></div>`}
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Data Summary</div>
+      <div class="result-box" style="margin-top:0">
+        <div class="result-row"><span>HI Method Records</span><span class="result-val">${state.hiRows.length}</span></div>
+        <div class="result-row"><span>Rise &amp; Fall Records</span><span class="result-val">${state.rfRows.length}</span></div>
+        <div class="result-row"><span>Least Squares Observations</span><span class="result-val">${state.lsRows.length}</span></div>
+        <div class="result-row"><span>Area Polygon Points</span><span class="result-val">${state.areaPoints.length}</span></div>
+        <div class="result-row"><span>Traverse Stations</span><span class="result-val">${state.traverseRows.length}</span></div>
+        <div class="result-row"><span>Team Members</span><span class="result-val">${state.teamMembers.length}</span></div>
+      </div>
+      <div class="flex-end" style="margin-top:10px">
+        <button class="btn btn-ghost btn-sm" onclick="navigate('export')">📤 Export All Data</button>
+        <button class="btn btn-ghost btn-sm" onclick="navigate('aicheck')">🤖 Run AI Check</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// 2. COORDINATE INPUT SYSTEM
+// ============================================================
+function renderCoordinates() {
+  const c = document.getElementById('mainContent');
+  c.innerHTML = `
+  <!-- ADD POINT FORM -->
+  <div class="card">
+    <div class="card-title">📍 Add Survey Point</div>
+    <div class="grid3">
+      <div class="field">
+        <label class="label">Point Name / ID *</label>
+        <input class="inp" id="ptName" placeholder="e.g. P1, BM1, TP3">
+      </div>
+      <div class="field">
+        <label class="label">Latitude (decimal °)</label>
+        <input class="inp" id="ptLat" type="number" step="any" placeholder="0.000000">
+      </div>
+      <div class="field">
+        <label class="label">Longitude (decimal °)</label>
+        <input class="inp" id="ptLon" type="number" step="any" placeholder="0.000000">
+      </div>
+      <div class="field">
+        <label class="label">Easting (m)</label>
+        <input class="inp" id="ptE" type="number" step="any" placeholder="0.000">
+      </div>
+      <div class="field">
+        <label class="label">Northing (m)</label>
+        <input class="inp" id="ptN" type="number" step="any" placeholder="0.000">
+      </div>
+      <div class="field">
+        <label class="label">Elevation / RL (m)</label>
+        <input class="inp" id="ptRL" type="number" step="any" placeholder="0.000">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Description / Remarks</label>
+      <input class="inp" id="ptDesc" placeholder="Optional field description or remarks">
+    </div>
+    <div class="flex-end">
+      <button class="btn btn-ghost" onclick="getGPS()">📡 Get Live GPS</button>
+      <button class="btn btn-warning" onclick="clearPointForm()">✕ Clear Form</button>
+      <button class="btn btn-success" onclick="addPoint()">+ Save Point</button>
+    </div>
+  </div>
+
+  <!-- SAVED POINTS TABLE -->
+  <div class="card">
+    <div class="card-title">
+      Saved Points
+      <span class="chip chip-blue">${state.points.length} total</span>
+    </div>
+
+    <!-- CSV Import -->
+    <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('csvFileInput').click()">
+        📂 Import CSV / TXT
+      </button>
+      <input type="file" id="csvFileInput" accept=".csv,.txt" style="display:none"
+        onchange="importCSVFile(this)">
+      <span class="text-muted" style="font-size:12px">
+        Format: PointID, Easting, Northing, Elevation, Description
+      </span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Lat</th><th>Lon</th>
+            <th>Easting</th><th>Northing</th><th>RL</th><th>Remarks</th><th>Delete</th>
+          </tr>
+        </thead>
+        <tbody id="pointsTableBody">${renderPointsTableRows()}</tbody>
+      </table>
+    </div>
+
+    ${state.points.length > 0 ? `
+    <div class="flex-end" style="margin-top:10px">
+      <button class="btn btn-danger btn-sm" onclick="if(confirm('Delete ALL points?')){state.points=[];saveState();renderCoordinates()}">
+        🗑 Clear All Points
+      </button>
+    </div>` : ''}
+  </div>`;
+}
+
+function renderPointsTableRows() {
+  if (!state.points.length) {
+    return '<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:20px">No points saved yet</td></tr>';
+  }
+  return state.points.map((p, i) => `
+    <tr>
+      <td style="color:var(--text3)">${i + 1}</td>
+      <td><b class="text-accent">${p.name}</b></td>
+      <td class="font-mono">${p.lat || '-'}</td>
+      <td class="font-mono">${p.lon || '-'}</td>
+      <td class="font-mono">${p.easting || '-'}</td>
+      <td class="font-mono">${p.northing || '-'}</td>
+      <td class="font-mono text-success">${p.rl || '-'}</td>
+      <td>${p.desc || '-'}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="deletePoint(${i})"
+          style="color:var(--accent4)">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+
+function addPoint() {
+  const name = document.getElementById('ptName').value.trim();
+  if (!name) { toast('Point Name / ID is required!', 'error'); return; }
+
+  // Check duplicate names
+  if (state.points.find(p => p.name === name)) {
+    toast(`Duplicate point name "${name}" — use a unique ID`, 'error');
+    return;
+  }
+
+  state.points.push({
+    name,
+    lat:      document.getElementById('ptLat').value || '',
+    lon:      document.getElementById('ptLon').value || '',
+    easting:  document.getElementById('ptE').value   || '',
+    northing: document.getElementById('ptN').value   || '',
+    rl:       document.getElementById('ptRL').value  || '',
+    desc:     document.getElementById('ptDesc').value || '',
+  });
+
+  saveState();
+  toast(`Point "${name}" saved!`, 'success');
+  clearPointForm();
+  document.getElementById('pointsTableBody').innerHTML = renderPointsTableRows();
+  // Update count badge
+  document.querySelector('.card-title .chip-blue').textContent = state.points.length + ' total';
+}
+
+function clearPointForm() {
+  ['ptName','ptLat','ptLon','ptE','ptN','ptRL','ptDesc'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+function deletePoint(i) {
+  const name = state.points[i].name;
+  state.points.splice(i, 1);
+  saveState();
+  toast(`Point "${name}" deleted`);
+  renderCoordinates();
+}
+
+// Get live GPS from browser
+function getGPS() {
+  if (!navigator.geolocation) { toast('GPS not supported on this device', 'error'); return; }
+  toast('Acquiring GPS location...');
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      document.getElementById('ptLat').value = pos.coords.latitude.toFixed(6);
+      document.getElementById('ptLon').value = pos.coords.longitude.toFixed(6);
+      if (pos.coords.altitude) {
+        document.getElementById('ptRL').value = pos.coords.altitude.toFixed(2);
+      }
+      toast('GPS location acquired!', 'success');
+    },
+    err => toast('GPS error: ' + err.message, 'error')
+  );
+}
+
+// Import CSV / TXT file
+function importCSVFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = e.target.result.split('\n').filter(l => l.trim());
+    let added = 0, skipped = 0;
+    lines.forEach((line, i) => {
+      // Skip header row
+      if (i === 0 && isNaN(parseFloat(line.split(',')[1]))) return;
+      const parts = line.split(',').map(s => s.trim());
+      if (parts.length >= 2) {
+        const name = parts[0] || ('IMP' + (i + 1));
+        if (!state.points.find(p => p.name === name)) {
+          state.points.push({
+            name,
+            easting:  parts[1] || '',
+            northing: parts[2] || '',
+            rl:       parts[3] || '',
+            desc:     parts[4] || '',
+            lat: '', lon: '',
+          });
+          added++;
+        } else {
+          skipped++;
+        }
+      }
+    });
+    saveState();
+    toast(`Imported ${added} points (${skipped} duplicates skipped)`, 'success');
+    renderCoordinates();
+  };
+  reader.readAsText(file);
+  input.value = ''; // Reset so same file can be re-imported
+}
+
+// ============================================================
+// 3. DISTANCE CALCULATOR
+// ============================================================
+function renderDistance() {
+  const c = document.getElementById('mainContent');
+  const opts = state.points.map(p =>
+    `<option value="${p.name}">${p.name} (E:${p.easting||'?'}, N:${p.northing||'?'}, RL:${p.rl||'?'})</option>`
+  ).join('');
+
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">📏 Distance Calculator</div>
+
+    <div class="formula-box">
+      Horizontal Distance = √[(E₂−E₁)² + (N₂−N₁)²] &nbsp;|&nbsp;
+      RL Difference = RL₂ − RL₁ &nbsp;|&nbsp;
+      Slope Distance = √[HD² + ΔRL²]
+    </div>
+
+    <div class="tabs" style="margin-top:14px">
+      <button class="tab ${state.distMode==='manual'?'active':''}"
+        onclick="state.distMode='manual';renderDistance()">✏️ Manual Entry</button>
+      <button class="tab ${state.distMode==='saved'?'active':''}"
+        onclick="state.distMode='saved';renderDistance()">📍 Saved Points</button>
+    </div>
+
+    ${state.distMode === 'manual' ? `
+    <div class="grid2">
+      <div style="background:var(--bg3);border-radius:var(--radius2);padding:14px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--accent)">Point 1</div>
+        <div class="field"><label class="label">Easting E₁ (m)</label><input class="inp" id="dE1" type="number" step="any" placeholder="0.000"></div>
+        <div class="field"><label class="label">Northing N₁ (m)</label><input class="inp" id="dN1" type="number" step="any" placeholder="0.000"></div>
+        <div class="field"><label class="label">RL₁ (m)</label><input class="inp" id="dRL1" type="number" step="any" placeholder="0.000"></div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--radius2);padding:14px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--accent2)">Point 2</div>
+        <div class="field"><label class="label">Easting E₂ (m)</label><input class="inp" id="dE2" type="number" step="any" placeholder="0.000"></div>
+        <div class="field"><label class="label">Northing N₂ (m)</label><input class="inp" id="dN2" type="number" step="any" placeholder="0.000"></div>
+        <div class="field"><label class="label">RL₂ (m)</label><input class="inp" id="dRL2" type="number" step="any" placeholder="0.000"></div>
+      </div>
+    </div>` : `
+    <div class="grid2">
+      <div class="field">
+        <label class="label">Point 1</label>
+        <select class="inp" id="dP1">${opts || '<option>No saved points</option>'}</select>
+      </div>
+      <div class="field">
+        <label class="label">Point 2</label>
+        <select class="inp" id="dP2">${opts || '<option>No saved points</option>'}</select>
+      </div>
+    </div>`}
+
+    <div class="flex-end">
+      <button class="btn btn-primary" onclick="calcDistance()">📐 Calculate Distance</button>
+    </div>
+    <div id="distResult"></div>
+  </div>`;
+}
+
+function calcDistance() {
+  let e1, n1, rl1, e2, n2, rl2;
+
+  if (state.distMode === 'saved') {
+    const n1v = document.getElementById('dP1').value;
+    const n2v = document.getElementById('dP2').value;
+    const p1 = state.points.find(p => p.name === n1v);
+    const p2 = state.points.find(p => p.name === n2v);
+    if (!p1 || !p2) { toast('Points not found in saved list', 'error'); return; }
+    e1=+p1.easting; n1=+p1.northing; rl1=+p1.rl;
+    e2=+p2.easting; n2=+p2.northing; rl2=+p2.rl;
+  } else {
+    e1=+document.getElementById('dE1').value;
+    n1=+document.getElementById('dN1').value;
+    rl1=+document.getElementById('dRL1').value;
+    e2=+document.getElementById('dE2').value;
+    n2=+document.getElementById('dN2').value;
+    rl2=+document.getElementById('dRL2').value;
+  }
+
+  // Formulas
+  const hd  = Math.sqrt((e2-e1)**2 + (n2-n1)**2);
+  const rld = rl2 - rl1;
+  const sd  = Math.sqrt(hd**2 + rld**2);
+  const bearing = Math.atan2(e2-e1, n2-n1) * 180 / Math.PI;
+  const bearingNorm = (bearing + 360) % 360;
+
+  document.getElementById('distResult').innerHTML = `
+    <div class="result-box">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)">📐 Calculation Results</div>
+      <div class="result-row">
+        <span>Horizontal Distance (HD)</span>
+        <span class="result-val">${hd.toFixed(4)} m &nbsp;/&nbsp; ${(hd*3.28084).toFixed(4)} ft</span>
+      </div>
+      <div class="result-row">
+        <span>RL Difference (ΔRL)</span>
+        <span class="result-val ${rld>=0?'text-success':'text-danger'}">${rld>=0?'+':''}${rld.toFixed(4)} m</span>
+      </div>
+      <div class="result-row">
+        <span>Slope Distance (SD)</span>
+        <span class="result-val">${sd.toFixed(4)} m &nbsp;/&nbsp; ${(sd*3.28084).toFixed(4)} ft</span>
+      </div>
+      <div class="result-row">
+        <span>Bearing (from North)</span>
+        <span class="result-val">${bearingNorm.toFixed(2)}°</span>
+      </div>
+      <div class="result-row">
+        <span>ΔEasting (E₂−E₁)</span>
+        <span class="result-val">${(e2-e1).toFixed(4)} m</span>
+      </div>
+      <div class="result-row">
+        <span>ΔNorthing (N₂−N₁)</span>
+        <span class="result-val">${(n2-n1).toFixed(4)} m</span>
+      </div>
+    </div>`;
+}
+
+// ============================================================
+// 4. AREA CALCULATOR (Shoelace / Coordinate Method)
+// ============================================================
+function renderArea() {
+  const c = document.getElementById('mainContent');
+  const opts = state.points.map(p =>
+    `<option value="${p.name}">${p.name} (E:${p.easting||'?'}, N:${p.northing||'?'})</option>`
+  ).join('');
+
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">🗺️ Area Calculator</div>
+
+    <div class="formula-box">
+      Shoelace Formula: Area = |½ × Σ(Eᵢ×Nᵢ₊₁ − Eᵢ₊₁×Nᵢ)| &nbsp;|&nbsp;
+      1 acre = 4046.856 m² &nbsp;|&nbsp; 1 kanal = 505.857 m² &nbsp;|&nbsp; 1 marla = 25.293 m²
+    </div>
+
+    <div class="grid2" style="margin-top:14px">
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">Add Point to Polygon</div>
+        <div class="field">
+          <label class="label">Load from saved point</label>
+          <select class="inp" id="aPtSel">
+            <option value="">-- Select saved point --</option>
+            ${opts}
+          </select>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="areaLoadFromSaved()" style="margin-bottom:10px">
+          ↙ Load Easting/Northing
+        </button>
+        <div class="grid2">
+          <div class="field"><label class="label">Easting (m)</label><input class="inp" id="aE" type="number" step="any" placeholder="0.000"></div>
+          <div class="field"><label class="label">Northing (m)</label><input class="inp" id="aN" type="number" step="any" placeholder="0.000"></div>
+        </div>
+        <div class="flex-end">
+          <button class="btn btn-success" onclick="areaAddPoint()">+ Add to Polygon</button>
+        </div>
+      </div>
+      <div id="areaResultDiv">
+        <div class="info-box">Add at least 3 points then click Calculate Area.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      Polygon Points
+      <span class="chip chip-blue">${state.areaPoints.length} points</span>
+    </div>
+    <div class="flex-end" style="margin-bottom:10px">
+      <button class="btn btn-danger btn-sm"
+        onclick="state.areaPoints=[];saveState();renderArea()">🗑 Clear Polygon</button>
+      <button class="btn btn-primary" onclick="calcArea()">📐 Calculate Area</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Easting</th><th>Northing</th><th>Remove</th></tr></thead>
+        <tbody id="areaPtsBody">${renderAreaRows()}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function renderAreaRows() {
+  if (!state.areaPoints.length) {
+    return '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:16px">No points in polygon</td></tr>';
+  }
+  return state.areaPoints.map((p, i) => `
+    <tr>
+      <td style="color:var(--text3)">${i + 1}</td>
+      <td class="font-mono">${p.e}</td>
+      <td class="font-mono">${p.n}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" style="color:var(--accent4)"
+          onclick="state.areaPoints.splice(${i},1);saveState();renderArea()">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+
+function areaLoadFromSaved() {
+  const n = document.getElementById('aPtSel').value;
+  if (!n) return;
+  const p = state.points.find(x => x.name === n);
+  if (p) {
+    document.getElementById('aE').value = p.easting;
+    document.getElementById('aN').value = p.northing;
+  }
+}
+
+function areaAddPoint() {
+  const e = parseFloat(document.getElementById('aE').value);
+  const n = parseFloat(document.getElementById('aN').value);
+  if (isNaN(e) || isNaN(n)) { toast('Enter valid Easting and Northing', 'error'); return; }
+  state.areaPoints.push({e, n});
+  saveState();
+  document.getElementById('areaPtsBody').innerHTML = renderAreaRows();
+  toast('Point added to polygon', 'success');
+}
+
+function calcArea() {
+  const pts = state.areaPoints;
+  if (pts.length < 3) { toast('Need at least 3 points for area calculation', 'error'); return; }
+
+  // Shoelace formula
+  let sum = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const j = (i + 1) % pts.length;
+    sum += pts[i].e * pts[j].n - pts[j].e * pts[i].n;
+  }
+  const sqm  = Math.abs(sum / 2);
+  const sqft = sqm * 10.76391;
+  const acre = sqm / 4046.8564224;
+  const hect = sqm / 10000;
+  const kana = sqm / 505.857;
+  const marl = sqm / 25.2929;
+
+  document.getElementById('areaResultDiv').innerHTML = `
+    <div class="result-box" style="margin-top:0">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)">🗺️ Area Results</div>
+      <div class="result-row"><span>Square Meters (m²)</span>
+        <span class="result-val">${sqm.toFixed(3)}</span></div>
+      <div class="result-row"><span>Square Feet (ft²)</span>
+        <span class="result-val">${sqft.toFixed(3)}</span></div>
+      <div class="result-row"><span>Acres</span>
+        <span class="result-val">${acre.toFixed(5)}</span></div>
+      <div class="result-row"><span>Hectares (ha)</span>
+        <span class="result-val">${hect.toFixed(5)}</span></div>
+      <div class="result-row"><span>Kanals</span>
+        <span class="result-val">${kana.toFixed(3)}</span></div>
+      <div class="result-row"><span>Marlas</span>
+        <span class="result-val">${marl.toFixed(3)}</span></div>
+      <div class="result-row"><span>Polygon Points</span>
+        <span class="result-val">${pts.length}</span></div>
+    </div>`;
+}
+
+// ============================================================
+// 5. LEVELING / RL CALCULATOR
+//    Tabs: A) HI Method  B) Rise & Fall  C) Least Squares
+// ============================================================
+function renderLeveling() {
+  const c = document.getElementById('mainContent');
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">📐 Elevation / RL Calculator</div>
+    <div class="tabs">
+      <button class="tab ${state.levPage==='hi'?'active':''}" onclick="setLevPage('hi')">
+        A. HI Method
+      </button>
+      <button class="tab ${state.levPage==='rf'?'active':''}" onclick="setLevPage('rf')">
+        B. Rise &amp; Fall
+      </button>
+      <button class="tab ${state.levPage==='ls'?'active':''}" onclick="setLevPage('ls')">
+        C. Least Squares
+      </button>
+    </div>
+    <div id="levContent"></div>
+  </div>`;
+  renderLevContent();
+}
+
+function setLevPage(t) {
+  state.levPage = t;
+  renderLeveling();
+}
+
+function renderLevContent() {
+  const d = document.getElementById('levContent');
+  if (!d) return;
+  if (state.levPage === 'hi') renderHIMethod(d);
+  else if (state.levPage === 'rf') renderRiseFall(d);
+  else renderLeastSquares(d);
+}
+
+// ---- A. HI METHOD ----
+function renderHIMethod(d) {
+  d.innerHTML = `
+    <div class="formula-box">
+      HI = RL + BS &nbsp;|&nbsp; RL(next) = HI − IS &nbsp;|&nbsp; RL(next) = HI − FS
+    </div>
+    <div class="grid3" style="margin:12px 0 10px">
+      <div class="field"><label class="label">Station</label>
+        <input class="inp" id="hiSt" placeholder="A, BM1, TP1..."></div>
+      <div class="field"><label class="label">Back Sight (BS)</label>
+        <input class="inp" id="hiBS" type="number" step="any" placeholder="0.000"></div>
+      <div class="field"><label class="label">Intermediate Sight (IS)</label>
+        <input class="inp" id="hiIS" type="number" step="any" placeholder="0.000"></div>
+      <div class="field"><label class="label">Fore Sight (FS)</label>
+        <input class="inp" id="hiFS" type="number" step="any" placeholder="0.000"></div>
+      <div class="field"><label class="label">Known RL (first row only)</label>
+        <input class="inp" id="hiRL" type="number" step="any" placeholder="100.000"></div>
+      <div class="field"><label class="label">Remarks</label>
+        <input class="inp" id="hiRem" placeholder="Optional"></div>
+    </div>
+    <div class="flex-end">
+      <button class="btn btn-danger btn-sm"
+        onclick="if(confirm('Clear all HI rows?')){state.hiRows=[];saveState();renderLeveling()}">🗑 Clear All</button>
+      <button class="btn btn-success" onclick="addHIRow()">+ Add Row</button>
+    </div>
+    <div class="divider"></div>
+    <div id="hiTable">${computeHITable()}</div>`;
+}
+
+function addHIRow() {
+  const st = document.getElementById('hiSt').value.trim();
+  if (!st) { toast('Station name required', 'error'); return; }
+  state.hiRows.push({
+    st,
+    bs:  document.getElementById('hiBS').value  || '',
+    is:  document.getElementById('hiIS').value  || '',
+    fs:  document.getElementById('hiFS').value  || '',
+    rl:  document.getElementById('hiRL').value  || '',
+    rem: document.getElementById('hiRem').value || '',
+  });
+  saveState();
+  renderLeveling();
+  toast('Row added', 'success');
+}
+
+function computeHITable() {
+  const rows = state.hiRows;
+  if (!rows.length) return '<div class="text-muted" style="padding:8px">No observations. Add rows above.</div>';
+
+  // Forward computation using HI method
+  let results = [];
+  let curRL = rows[0].rl ? +rows[0].rl : 100.0;
+  let curHI = rows[0].bs ? curRL + (+rows[0].bs) : curRL;
+  results.push({ ...rows[0], calcRL: curRL.toFixed(4), calcHI: curHI.toFixed(4) });
+
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    // Update RL from previous HI
+    if (r.is && r.is !== '')       curRL = curHI - (+r.is);
+    else if (r.fs && r.fs !== '')  curRL = curHI - (+r.fs);
+    // Update HI if BS present
+    if (r.bs && r.bs !== '')       curHI = curRL + (+r.bs);
+    results.push({ ...r, calcRL: curRL.toFixed(4), calcHI: curHI.toFixed(4) });
+  }
+
+  // Arithmetic check
+  const sumBS = rows.reduce((a, r) => a + (r.bs ? +r.bs : 0), 0);
+  const sumFS = rows.reduce((a, r) => a + (r.fs ? +r.fs : 0), 0);
+  const firstRL = +rows[0].rl || 100;
+  const lastRL = +results[results.length - 1].calcRL;
+
+  return `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Station</th><th>BS</th><th>IS</th><th>FS</th>
+          <th>HI (m)</th><th>RL (m)</th><th>Remarks</th></tr>
+        </thead>
+        <tbody>
+          ${results.map(r => `
+          <tr>
+            <td><b>${r.st}</b></td>
+            <td class="font-mono text-accent">${r.bs || '-'}</td>
+            <td class="font-mono">${r.is || '-'}</td>
+            <td class="font-mono text-warning">${r.fs || '-'}</td>
+            <td class="font-mono text-accent">${r.calcHI}</td>
+            <td class="font-mono text-success font-bold">${r.calcRL}</td>
+            <td>${r.rem || '-'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="result-box" style="margin-top:12px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text2)">Arithmetic Check</div>
+      <div class="result-row"><span>ΣBS</span><span class="result-val">${sumBS.toFixed(4)}</span></div>
+      <div class="result-row"><span>ΣFS</span><span class="result-val">${sumFS.toFixed(4)}</span></div>
+      <div class="result-row"><span>ΣBS − ΣFS</span><span class="result-val">${(sumBS-sumFS).toFixed(4)}</span></div>
+      <div class="result-row"><span>Last RL − First RL</span><span class="result-val">${(lastRL-firstRL).toFixed(4)}</span></div>
+      <div class="result-row">
+        <span>Check</span>
+        <span class="result-val ${Math.abs((sumBS-sumFS)-(lastRL-firstRL))<0.001?'text-success':'text-danger'}">
+          ${Math.abs((sumBS-sumFS)-(lastRL-firstRL))<0.001?'✅ PASSED':'❌ FAILED'} (Δ=${Math.abs((sumBS-sumFS)-(lastRL-firstRL)).toFixed(4)})
+        </span>
+      </div>
+    </div>
+    <div class="flex-end"><button class="btn btn-ghost btn-sm" onclick="exportHICSV()">📥 Export CSV</button></div>`;
+}
+
+// ---- B. RISE AND FALL ----
+function renderRiseFall(d) {
+  d.innerHTML = `
+    <div class="formula-box">
+      Rise = Prev Staff − Current Staff (if positive) &nbsp;|&nbsp;
+      Fall = Current Staff − Prev Staff (if positive) &nbsp;|&nbsp;
+      RL = Prev RL + Rise − Fall
+    </div>
+    <div class="grid3" style="margin:12px 0 10px">
+      <div class="field"><label class="label">Station</label>
+        <input class="inp" id="rfSt" placeholder="A, B, TP1..."></div>
+      <div class="field"><label class="label">Staff Reading (m)</label>
+        <input class="inp" id="rfSR" type="number" step="any" placeholder="0.000"></div>
+      <div class="field"><label class="label">Type</label>
+        <select class="inp" id="rfType">
+          <option value="BS">BS — Back Sight</option>
+          <option value="IS">IS — Intermediate</option>
+          <option value="FS">FS — Fore Sight</option>
+        </select></div>
+      <div class="field"><label class="label">Known RL (first station)</label>
+        <input class="inp" id="rfRL" type="number" step="any" placeholder="100.000"></div>
+      <div class="field"><label class="label">Remarks</label>
+        <input class="inp" id="rfRem" placeholder="Optional"></div>
+    </div>
+    <div class="flex-end">
+      <button class="btn btn-danger btn-sm"
+        onclick="if(confirm('Clear all Rise/Fall rows?')){state.rfRows=[];saveState();renderLeveling()}">🗑 Clear</button>
+      <button class="btn btn-success" onclick="addRFRow()">+ Add Row</button>
+    </div>
+    <div class="divider"></div>
+    <div id="rfTable">${computeRFTable()}</div>`;
+}
+
+function addRFRow() {
+  const st = document.getElementById('rfSt').value.trim();
+  if (!st) { toast('Station name required', 'error'); return; }
+  const sr = document.getElementById('rfSR').value;
+  if (sr === '') { toast('Staff reading required', 'error'); return; }
+  state.rfRows.push({
+    st,
+    sr: +sr,
+    type: document.getElementById('rfType').value,
+    rl:   document.getElementById('rfRL').value || '',
+    rem:  document.getElementById('rfRem').value || '',
+  });
+  saveState();
+  renderLeveling();
+  toast('Row added', 'success');
+}
+
+function computeRFTable() {
+  const rows = state.rfRows;
+  if (!rows.length) return '<div class="text-muted" style="padding:8px">No observations added.</div>';
+
+  const results = [];
+  let curRL = rows[0].rl ? +rows[0].rl : 100.0;
+  results.push({ ...rows[0], rise: '-', fall: '-', calcRL: curRL.toFixed(4) });
+
+  for (let i = 1; i < rows.length; i++) {
+    const diff = +rows[i-1].sr - +rows[i].sr;
+    const rise = diff > 0 ? diff.toFixed(4) : '-';
+    const fall = diff < 0 ? Math.abs(diff).toFixed(4) : '-';
+    curRL += diff;
+    results.push({ ...rows[i], rise, fall, calcRL: curRL.toFixed(4) });
+  }
+
+  // Arithmetic check
+  const sumBS = rows.filter(r => r.type==='BS').reduce((a,r)=>a+(+r.sr),0);
+  const sumFS = rows.filter(r => r.type==='FS').reduce((a,r)=>a+(+r.sr),0);
+  const sumRise = results.reduce((a,r)=>a+(r.rise!=='-'?+r.rise:0),0);
+  const sumFall = results.reduce((a,r)=>a+(r.fall!=='-'?+r.fall:0),0);
+  const firstRL = +rows[0].rl || 100;
+  const lastRL  = +results[results.length-1].calcRL;
+
+  return `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Station</th><th>Staff Reading</th><th>Type</th>
+          <th>Rise (+)</th><th>Fall (−)</th><th>RL (m)</th><th>Remarks</th></tr>
+        </thead>
+        <tbody>
+          ${results.map(r => `
+          <tr>
+            <td><b>${r.st}</b></td>
+            <td class="font-mono">${r.sr}</td>
+            <td>
+              <span class="chip ${r.type==='BS'?'chip-blue':r.type==='FS'?'chip-red':'chip-amber'}">
+                ${r.type}
+              </span>
+            </td>
+            <td class="font-mono text-success">${r.rise}</td>
+            <td class="font-mono text-danger">${r.fall}</td>
+            <td class="font-mono text-success font-bold">${r.calcRL}</td>
+            <td>${r.rem || '-'}</td>
+          </tr>`).join('')}
+        </tbody>
+        <tfoot>
+          <tr style="background:#eef2f7;font-weight:600">
+            <td><b>Σ Total</b></td>
+            <td></td>
+            <td>BS:${sumBS.toFixed(3)} FS:${sumFS.toFixed(3)}</td>
+            <td class="font-mono text-success">${sumRise.toFixed(4)}</td>
+            <td class="font-mono text-danger">${sumFall.toFixed(4)}</td>
+            <td class="font-mono">${lastRL.toFixed(4)}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="result-box" style="margin-top:12px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text2)">Arithmetic Check (all 3 must match)</div>
+      <div class="result-row"><span>ΣBS − ΣFS</span><span class="result-val">${(sumBS-sumFS).toFixed(4)}</span></div>
+      <div class="result-row"><span>ΣRise − ΣFall</span><span class="result-val">${(sumRise-sumFall).toFixed(4)}</span></div>
+      <div class="result-row"><span>Last RL − First RL</span><span class="result-val">${(lastRL-firstRL).toFixed(4)}</span></div>
+      <div class="result-row">
+        <span>Arithmetic Check</span>
+        <span class="result-val ${Math.abs((sumBS-sumFS)-(lastRL-firstRL))<0.001?'text-success':'text-danger'}">
+          ${Math.abs((sumBS-sumFS)-(lastRL-firstRL))<0.001?'✅ PASSED':'❌ FAILED'}
+        </span>
+      </div>
+    </div>
+    <div class="flex-end">
+      <button class="btn btn-ghost btn-sm" onclick="exportRFCSV()">📥 Export CSV</button>
+    </div>`;
+}
+
+// ---- C. LEAST SQUARES METHOD ----
+/*
+   LEAST SQUARES WEIGHTED LEVELING ADJUSTMENT
+   ============================================
+   Theory:
+     In leveling networks, multiple height difference observations (Δh)
+     are made between stations. When there is redundancy (more observations
+     than unknowns), the system is over-determined and requires adjustment.
+
+   Simplified Weighted Least Squares:
+     Step 1: Assign weights w_i
+       - If distance-based: w_i = 1 / d_i  (shorter route = higher weight)
+       - If manual: w_i = user input value
+
+     Step 2: Compute approximate RLs
+       - Forward traversal from known starting RL
+
+     Step 3: Compute misclosure (if closing BM is given)
+       - Misclosure (e) = Σ(observed Δh) − (RL_closing − RL_starting)
+
+     Step 4: Distribute corrections proportional to route distance
+       - Correction_i = −e × (d_i / Σd)
+       - (In full LS matrix form: corrections minimize Σw_i × v_i²)
+
+     Step 5: Adjusted Δh_i = observed_Δh_i + correction_i
+     Step 6: Adjusted RLs recomputed from adjusted Δh values
+     Step 7: Residuals v_i = correction_i (for simplified proportional method)
+*/
+function renderLeastSquares(d) {
+  d.innerHTML = `
+    <div class="info-box" style="margin-bottom:14px">
+      <b>📐 Least Squares Leveling Adjustment</b><br>
+      Used when multiple benchmark points or redundant height difference observations exist.
+      Corrections are distributed proportionally to distance (longer route gets larger correction).
+      Formula: <code>Correction_i = −Misclosure × (distance_i / Σdistance)</code>
+    </div>
+
+    <div style="background:var(--navy);border-radius:var(--radius2);padding:16px;margin-bottom:14px;border:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text2)">Add Observation</div>
+      <div class="grid3">
+        <div class="field"><label class="label">Observation ID *</label>
+          <input class="inp" id="lsID" placeholder="L1, OBS1, Seg-AB..."></div>
+        <div class="field"><label class="label">From Station *</label>
+          <input class="inp" id="lsFrom" placeholder="BM1, A, TP1..."></div>
+        <div class="field"><label class="label">To Station *</label>
+          <input class="inp" id="lsTo" placeholder="BM2, B, TP2..."></div>
+        <div class="field"><label class="label">Observed Height Diff Δh (m) *</label>
+          <input class="inp" id="lsDh" type="number" step="any" placeholder="e.g. +1.234 or -0.567"></div>
+        <div class="field"><label class="label">Distance (km) or Manual Weight *</label>
+          <input class="inp" id="lsDist" type="number" step="any" min="0.001" placeholder="e.g. 1.5"></div>
+        <div class="field"><label class="label">Weight Type</label>
+          <select class="inp" id="lsWtype">
+            <option value="distance">1/Distance (km) — standard</option>
+            <option value="manual">Manual Weight value</option>
+          </select></div>
+        <div class="field"><label class="label">Known RL of Starting BM (m)</label>
+          <input class="inp" id="lsKRL" type="number" step="any" placeholder="e.g. 100.000"></div>
+        <div class="field"><label class="label">Known RL of Closing BM (optional)</label>
+          <input class="inp" id="lsClRL" type="number" step="any" placeholder="e.g. 102.456"></div>
+        <div class="field"><label class="label">Remarks</label>
+          <input class="inp" id="lsRem" placeholder="Optional notes"></div>
+      </div>
+      <div class="flex-end">
+        <button class="btn btn-danger btn-sm"
+          onclick="if(confirm('Clear all LS observations?')){state.lsRows=[];saveState();renderLeveling()}">
+          🗑 Clear All
+        </button>
+        <button class="btn btn-success" onclick="addLSRow()">+ Add Observation</button>
+      </div>
+    </div>
+
+    <div class="flex-end" style="margin-bottom:12px">
+      <span class="text-muted" style="font-size:12px;margin-right:auto">
+        ${state.lsRows.length} observation(s) added
+      </span>
+      <button class="btn btn-ghost btn-sm" onclick="exportLSCSV()">📥 Export CSV</button>
+      <button class="btn btn-primary" onclick="runLeastSquares()">
+        🔢 Run Least Squares Adjustment
+      </button>
+    </div>
+
+    <!-- Observations preview table -->
+    ${state.lsRows.length ? `
+    <div class="table-wrap" style="margin-bottom:14px">
+      <table>
+        <thead><tr><th>ID</th><th>From</th><th>To</th><th>Obs Δh (m)</th><th>Dist/Wt</th><th>Weight Type</th><th>Known RL</th><th>Closing RL</th><th>Remarks</th><th>Del</th></tr></thead>
+        <tbody>
+          ${state.lsRows.map((r,i)=>`
+          <tr>
+            <td><b>${r.id}</b></td><td>${r.from}</td><td>${r.to}</td>
+            <td class="font-mono">${r.dh >= 0 ? '+' : ''}${r.dh.toFixed(4)}</td>
+            <td class="font-mono">${r.dist}</td>
+            <td>${r.wtype==='distance'?'1/Distance':'Manual'}</td>
+            <td class="font-mono">${r.krl !== '' ? r.krl : '-'}</td>
+            <td class="font-mono">${r.clrl !== '' ? r.clrl : '-'}</td>
+            <td>${r.rem||'-'}</td>
+            <td><button class="btn btn-ghost btn-sm" style="color:var(--accent4)"
+              onclick="state.lsRows.splice(${i},1);saveState();renderLeveling()">🗑</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : '<div class="text-muted" style="padding:8px">No observations added yet.</div>'}
+
+    <div id="lsAdjResult"></div>`;
+}
+
+function addLSRow() {
+  // Input validation
+  const id   = document.getElementById('lsID').value.trim();
+  const from = document.getElementById('lsFrom').value.trim();
+  const to   = document.getElementById('lsTo').value.trim();
+  const dhVal= document.getElementById('lsDh').value;
+  const dist = parseFloat(document.getElementById('lsDist').value);
+  const wtype= document.getElementById('lsWtype').value;
+  const krl  = document.getElementById('lsKRL').value;
+  const clrl = document.getElementById('lsClRL').value;
+  const rem  = document.getElementById('lsRem').value;
+
+  if (!id)             { toast('Observation ID is required', 'error'); return; }
+  if (!from || !to)    { toast('From Station and To Station are required', 'error'); return; }
+  if (dhVal === '')    { toast('Observed height difference (Δh) is required', 'error'); return; }
+  if (isNaN(dist) || dist <= 0) { toast('Distance/Weight must be a positive number', 'error'); return; }
+
+  state.lsRows.push({
+    id, from, to,
+    dh:   parseFloat(dhVal),
+    dist,
+    wtype,
+    krl:  krl  !== '' ? parseFloat(krl)  : '',
+    clrl: clrl !== '' ? parseFloat(clrl) : '',
+    rem,
+  });
+
+  saveState();
+  renderLeveling();
+  toast(`Observation "${id}" added`, 'success');
+}
+
+function runLeastSquares() {
+  /*
+     LEAST SQUARES WEIGHTED LEVELING — FULL CALCULATION
+     ====================================================
+     For a leveling network with n observations:
+
+     1. WEIGHTS:
+        w_i = 1/d_i  if distance-based (d in km)
+        w_i = user value  if manual
+
+     2. APPROXIMATE RLs (forward computation):
+        RL(to_i) = RL(from_i) + Δh_i
+
+     3. MISCLOSURE (if closing BM given):
+        Misclosure e = Σ(Δh_i) − [RL_close − RL_start]
+
+     4. CORRECTIONS (proportional to distance = simplified WLS):
+        c_i = −e × (d_i / Σd_i)
+        This is equivalent to minimising Σ(c_i²/d_i) = Σ(v_i² × w_i)
+        which is the Weighted Least Squares criterion.
+
+     5. ADJUSTED VALUES:
+        Δh_adj_i = Δh_i + c_i
+        RL_adj computed forward from adjusted Δh
+
+     6. RESIDUALS:
+        v_i = c_i  (correction applied = residual in simplified method)
+  */
+
+  const rows = state.lsRows;
+  if (!rows.length) { toast('No observations to adjust', 'error'); return; }
+
+  // Step 1: Compute weights
+  const weights = rows.map(r =>
+    r.wtype === 'distance' ? 1 / r.dist : r.dist
+  );
+  const sumWeights = weights.reduce((a, b) => a + b, 0);
+  const sumDist    = rows.reduce((a, r) => a + r.dist, 0);
+
+  // Step 2: Starting RL
+  const startRL = rows[0].krl !== '' ? +rows[0].krl : 100.0;
+
+  // Step 3: Approximate RLs (forward traversal)
+  const approxRL = {};
+  approxRL[rows[0].from] = startRL;
+  rows.forEach(r => {
+    const fromRL = approxRL[r.from] !== undefined ? approxRL[r.from] : startRL;
+    approxRL[r.to] = fromRL + r.dh;
+  });
+
+  // Step 4: Misclosure
+  const sumObsDh = rows.reduce((a, r) => a + r.dh, 0);
+  const closingRow = rows.find(r => r.clrl !== '');
+  const hasClosing = !!(closingRow && closingRow.clrl !== '');
+  const knownDiff  = hasClosing ? (closingRow.clrl - startRL) : null;
+  const misclosure = hasClosing ? (sumObsDh - knownDiff) : 0;
+
+  // Step 5: Corrections — proportional to distance (simplified WLS)
+  // c_i = −e × (d_i / Σd_i)
+  const corrections = rows.map(r =>
+    hasClosing ? (-misclosure * r.dist / sumDist) : 0
+  );
+  const sumCorr = corrections.reduce((a, b) => a + b, 0);
+
+  // Step 6: Adjusted Δh and RLs
+  const adjDh  = rows.map((r, i) => r.dh + corrections[i]);
+  const adjRLs = [];
+  let adjCurRL = startRL;
+  adjDh.forEach(dh => {
+    adjCurRL += dh;
+    adjRLs.push(adjCurRL);
+  });
+
+  // Final adjusted closing RL
+  const finalAdjRL = adjRLs[adjRLs.length - 1];
+
+  // Build result HTML
+  const resDiv = document.getElementById('lsAdjResult');
+  if (!resDiv) return;
+
+  const isBigMisclosure = hasClosing && Math.abs(misclosure) > 0.050;
+
+  resDiv.innerHTML = `
+    <!-- ARITHMETIC CHECK PANEL -->
+    ${hasClosing ? `
+    <div class="${isBigMisclosure ? 'warn-box' : 'success-box'}" style="margin-bottom:14px">
+      <b>📋 Arithmetic Check</b><br>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:11px;opacity:0.7">Total Observed Δh</div>
+          <div class="font-mono font-bold">${sumObsDh.toFixed(4)} m</div>
+        </div>
+        <div>
+          <div style="font-size:11px;opacity:0.7">Known Δh (BM₂−BM₁)</div>
+          <div class="font-mono font-bold">${knownDiff.toFixed(4)} m</div>
+        </div>
+        <div>
+          <div style="font-size:11px;opacity:0.7">Misclosure (e)</div>
+          <div class="font-mono font-bold ${isBigMisclosure?'text-danger':''}">${misclosure.toFixed(4)} m</div>
+        </div>
+        <div>
+          <div style="font-size:11px;opacity:0.7">Total Correction</div>
+          <div class="font-mono font-bold">${sumCorr.toFixed(4)} m</div>
+        </div>
+        <div>
+          <div style="font-size:11px;opacity:0.7">Final Adj. Closing RL</div>
+          <div class="font-mono font-bold">${finalAdjRL.toFixed(4)} m</div>
+        </div>
+        <div>
+          <div style="font-size:11px;opacity:0.7">Status</div>
+          <div class="font-bold">${isBigMisclosure?'⚠️ Large misclosure (>50mm)':'✅ Within tolerance'}</div>
+        </div>
+      </div>
+    </div>` : `
+    <div class="caution-box" style="margin-bottom:14px">
+      ⚠️ No closing benchmark provided — misclosure cannot be computed. Corrections set to zero.
+    </div>`}
+
+    <!-- ADJUSTMENT RESULTS TABLE -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Obs ID</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Obs Δh (m)</th>
+            <th>Dist / Wt</th>
+            <th>Weight (w)</th>
+            <th>Correction c (m)</th>
+            <th>Adj Δh (m)</th>
+            <th>Adj RL — To (m)</th>
+            <th>Residual v</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((r, i) => `
+          <tr>
+            <td><b>${r.id}</b></td>
+            <td>${r.from}</td>
+            <td>${r.to}</td>
+            <td class="font-mono">${r.dh >= 0 ? '+' : ''}${r.dh.toFixed(4)}</td>
+            <td class="font-mono">${r.dist}</td>
+            <td class="font-mono">${weights[i].toFixed(4)}</td>
+            <td class="font-mono ${corrections[i]>0?'text-success':'text-warning'}">
+              ${corrections[i]>=0?'+':''}${corrections[i].toFixed(4)}
+            </td>
+            <td class="font-mono text-accent">
+              ${adjDh[i]>=0?'+':''}${adjDh[i].toFixed(4)}
+            </td>
+            <td class="font-mono text-success font-bold">${adjRLs[i].toFixed(4)}</td>
+            <td class="font-mono">${corrections[i].toFixed(4)}</td>
+            <td>${r.rem || '-'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="result-box" style="margin-top:14px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)">
+        📊 Adjustment Summary
+      </div>
+      <div class="result-row"><span>Starting Benchmark RL</span>
+        <span class="result-val">${startRL.toFixed(4)} m</span></div>
+      <div class="result-row"><span>Final Adjusted RL (last station)</span>
+        <span class="result-val">${finalAdjRL.toFixed(4)} m</span></div>
+      ${hasClosing?`
+      <div class="result-row"><span>Known Closing BM RL</span>
+        <span class="result-val">${closingRow.clrl.toFixed(4)} m</span></div>
+      <div class="result-row"><span>Misclosure</span>
+        <span class="result-val ${isBigMisclosure?'text-danger':''}">${misclosure.toFixed(4)} m</span></div>`:``}
+      <div class="result-row"><span>Total Correction Applied</span>
+        <span class="result-val">${sumCorr.toFixed(4)} m</span></div>
+      <div class="result-row"><span>Number of Observations</span>
+        <span class="result-val">${rows.length}</span></div>
+      <div class="result-row"><span>Total Route Distance / Sum of Weights</span>
+        <span class="result-val">${sumDist.toFixed(3)}</span></div>
+      <div class="result-row"><span>Adjustment Method</span>
+        <span class="result-val" style="font-size:12px">Simplified Weighted LS (Bowditch-type)</span></div>
+    </div>
+    <div class="flex-end" style="margin-top:10px">
+      <button class="btn btn-ghost btn-sm" onclick="exportLSCSV()">📥 Export LS CSV</button>
+    </div>`;
+}
+
+// ============================================================
+// 6. TRAVERSE SURVEY CALCULATOR
+// ============================================================
+function renderTraverse() {
+  const c = document.getElementById('mainContent');
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">🔄 Traverse Survey Calculator</div>
+    <div class="formula-box">
+      Latitude = Distance × cos(Bearing°) &nbsp;|&nbsp;
+      Departure = Distance × sin(Bearing°) &nbsp;|&nbsp;
+      Closing Error = √(ΣDep² + ΣLat²) &nbsp;|&nbsp;
+      Relative Precision = Total Distance / Closing Error
+    </div>
+    <div class="grid3" style="margin:12px 0 10px">
+      <div class="field"><label class="label">Station Name</label>
+        <input class="inp" id="trSt" placeholder="A, B, C..."></div>
+      <div class="field"><label class="label">Bearing (°, 0–360)</label>
+        <input class="inp" id="trBr" type="number" step="any" min="0" max="360" placeholder="0.00"></div>
+      <div class="field"><label class="label">Distance (m)</label>
+        <input class="inp" id="trDist" type="number" step="any" min="0" placeholder="0.000"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label class="label">Starting Easting (for first row)</label>
+        <input class="inp" id="trSE" type="number" step="any" placeholder="1000.000"></div>
+      <div class="field"><label class="label">Starting Northing (for first row)</label>
+        <input class="inp" id="trSN" type="number" step="any" placeholder="1000.000"></div>
+    </div>
+    <div class="flex-end">
+      <button class="btn btn-danger btn-sm"
+        onclick="if(confirm('Clear traverse?')){state.traverseRows=[];saveState();renderTraverse()}">
+        🗑 Clear All
+      </button>
+      <button class="btn btn-success" onclick="addTraverseRow()">+ Add Station</button>
+      <button class="btn btn-primary" onclick="calcTraverse()">🔢 Calculate Traverse</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Traverse Table
+      <span class="chip chip-blue">${state.traverseRows.length} stations</span>
+    </div>
+    <div id="traverseTableDiv">${buildTraverseTable()}</div>
+  </div>`;
+}
+
+function addTraverseRow() {
+  const st = document.getElementById('trSt').value.trim();
+  if (!st) { toast('Station name required', 'error'); return; }
+  const br = parseFloat(document.getElementById('trBr').value);
+  const dist = parseFloat(document.getElementById('trDist').value);
+  if (isNaN(br)) { toast('Bearing required', 'error'); return; }
+  if (isNaN(dist) || dist <= 0) { toast('Valid distance required', 'error'); return; }
+  state.traverseRows.push({
+    st, bearing: br, dist,
+    se: document.getElementById('trSE').value || '',
+    sn: document.getElementById('trSN').value || '',
+  });
+  saveState();
+  renderTraverse();
+  toast(`Station "${st}" added`, 'success');
+}
+
+function buildTraverseTable() {
+  const rows = state.traverseRows;
+  if (!rows.length) return '<div class="text-muted" style="padding:8px">No stations added. Add stations above.</div>';
+
+  let E = rows[0].se ? +rows[0].se : 1000;
+  let N = rows[0].sn ? +rows[0].sn : 1000;
+  const startE = E, startN = N;
+  const results = [];
+
+  rows.forEach(r => {
+    const brRad  = r.bearing * Math.PI / 180;
+    const lat    = r.dist * Math.cos(brRad);
+    const dep    = r.dist * Math.sin(brRad);
+    E += dep; N += lat;
+    results.push({ ...r, lat: lat.toFixed(4), dep: dep.toFixed(4), E: E.toFixed(4), N: N.toFixed(4) });
+  });
+
+  const closingDE = E - startE;
+  const closingDN = N - startN;
+  const closingErr = Math.sqrt(closingDE**2 + closingDN**2);
+  const totalDist  = rows.reduce((a, r) => a + r.dist, 0);
+  const relPrec    = closingErr > 0 ? Math.round(totalDist / closingErr) : '∞';
+
+  return `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Station</th><th>Bearing (°)</th><th>Distance (m)</th>
+            <th>Latitude (+N/−S)</th><th>Departure (+E/−W)</th>
+            <th>Easting</th><th>Northing</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${results.map(r => `
+          <tr>
+            <td><b>${r.st}</b></td>
+            <td class="font-mono">${r.bearing.toFixed(2)}°</td>
+            <td class="font-mono">${r.dist.toFixed(3)}</td>
+            <td class="font-mono ${+r.lat>=0?'text-success':'text-danger'}">${(+r.lat>=0?'+':'')+r.lat}</td>
+            <td class="font-mono ${+r.dep>=0?'text-accent':'text-warning'}">${(+r.dep>=0?'+':'')+r.dep}</td>
+            <td class="font-mono">${r.E}</td>
+            <td class="font-mono">${r.N}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="result-box" style="margin-top:14px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)">Traverse Closure Analysis</div>
+      <div class="result-row"><span>Total Distance</span>
+        <span class="result-val">${totalDist.toFixed(3)} m</span></div>
+      <div class="result-row"><span>Closing Error ΔE</span>
+        <span class="result-val">${closingDE.toFixed(4)} m</span></div>
+      <div class="result-row"><span>Closing Error ΔN</span>
+        <span class="result-val">${closingDN.toFixed(4)} m</span></div>
+      <div class="result-row"><span>Total Closing Error</span>
+        <span class="result-val ${closingErr>0.1?'text-danger':'text-success'}">${closingErr.toFixed(4)} m</span></div>
+      <div class="result-row"><span>Relative Precision</span>
+        <span class="result-val">1 : ${relPrec}</span></div>
+    </div>
+    <div class="flex-end">
+      <button class="btn btn-ghost btn-sm" onclick="exportTraverseCSV()">📥 Export CSV</button>
+    </div>`;
+}
+
+function calcTraverse() {
+  document.getElementById('traverseTableDiv').innerHTML = buildTraverseTable();
+  toast('Traverse calculated!', 'success');
+}
+
+// ============================================================
+// 7. UNIT CONVERTER
+// ============================================================
+function renderConverter() {
+  const c = document.getElementById('mainContent');
+  const conversions = [
+    ['Meters → Feet',         'm2ft',  'v => (v * 3.28084).toFixed(4)',     'm',    'ft'],
+    ['Feet → Meters',         'ft2m',  'v => (v * 0.3048).toFixed(4)',      'ft',   'm'],
+    ['m² → Acres',            'm2ac',  'v => (v / 4046.8564).toFixed(6)',   'm²',   'acres'],
+    ['Acres → m²',            'ac2m',  'v => (v * 4046.8564).toFixed(4)',   'acres','m²'],
+    ['Hectares → Acres',      'ha2ac', 'v => (v * 2.47105).toFixed(4)',     'ha',   'acres'],
+    ['Acres → Hectares',      'ac2ha', 'v => (v * 0.40469).toFixed(4)',     'acres','ha'],
+    ['Degrees → Radians',     'deg2r', 'v => (v * Math.PI / 180).toFixed(6)','°', 'rad'],
+    ['Radians → Degrees',     'rad2d', 'v => (v * 180 / Math.PI).toFixed(4)','rad','°'],
+    ['m² → Kanal',            'm2kn',  'v => (v / 505.857).toFixed(4)',     'm²',   'kanal'],
+    ['m² → Marla',            'm2mr',  'v => (v / 25.2929).toFixed(4)',     'm²',   'marla'],
+    ['Kanal → m²',            'kn2m',  'v => (v * 505.857).toFixed(4)',     'kanal','m²'],
+    ['Marla → m²',            'mr2m',  'v => (v * 25.2929).toFixed(4)',     'marla','m²'],
+  ];
+
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">⚖️ Unit Converter — Instant Conversions</div>
+    <div class="grid3">
+      ${conversions.map(([title, id, fn, from, to]) => `
+      <div class="card" style="margin:0;padding:14px">
+        <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:8px">${title}</div>
+        <div class="flex">
+          <div style="flex:1">
+            <div class="label">${from}</div>
+            <input class="inp" id="${id}_in" type="number" step="any" placeholder="Enter value"
+              oninput="
+                try {
+                  const v = parseFloat(this.value);
+                  const fn = ${fn};
+                  document.getElementById('${id}_out').value = isNaN(v) ? '' : fn(v);
+                } catch(e){}
+              ">
+          </div>
+          <div style="padding:0 6px;color:var(--text3);margin-top:20px">→</div>
+          <div style="flex:1">
+            <div class="label">${to}</div>
+            <input class="inp" id="${id}_out" placeholder="Result" readonly
+              style="background:#f0fdf9;color:#007d64">
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// 8. MAP VIEW (Leaflet.js + OpenStreetMap)
+// ============================================================
+let leafletMap = null;
+
+function renderMap() {
+  const c = document.getElementById('mainContent');
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">🗾 Map View — Survey Points on OpenStreetMap</div>
+    <div class="flex" style="margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <button class="btn btn-primary btn-sm" onclick="initLeafletMap()">🔄 Reload Map</button>
+      <button class="btn btn-ghost btn-sm" onclick="centerMapOnPoints()">📍 Fit All Points</button>
+      <span class="text-muted" style="font-size:12px">
+        ${state.points.filter(p=>p.lat&&p.lon).length} points with GPS coords plotted
+      </span>
+    </div>
+    <div id="map-container"></div>
+    <div class="info-box" style="margin-top:10px">
+      Points require Latitude &amp; Longitude to appear on map.
+      Go to <b>Coordinates</b> to add GPS coordinates or use <b>📡 Get Live GPS</b>.
+    </div>
+  </div>`;
+  setTimeout(initLeafletMap, 150);
+}
+
+function initLeafletMap() {
+  if (leafletMap) { leafletMap.remove(); leafletMap = null; }
+
+  const gpsPoints = state.points.filter(p => p.lat && p.lon);
+  // Default center: Pakistan
+  const center = gpsPoints.length
+    ? [+gpsPoints[0].lat, +gpsPoints[0].lon]
+    : [30.3753, 69.3451];
+  const zoom = gpsPoints.length > 0 ? 15 : 5;
+
+  leafletMap = L.map('map-container').setView(center, zoom);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+  }).addTo(leafletMap);
+
+  // Add markers
+  gpsPoints.forEach(p => {
+    L.marker([+p.lat, +p.lon])
+      .addTo(leafletMap)
+      .bindPopup(`
+        <b style="font-size:14px">${p.name}</b><br>
+        Lat: ${p.lat}<br>Lon: ${p.lon}<br>
+        RL: ${p.rl || 'N/A'} m<br>
+        ${p.desc ? '<i>' + p.desc + '</i>' : ''}
+      `);
+  });
+
+  // Connect points with polyline
+  if (gpsPoints.length > 1) {
+    const latLngs = gpsPoints.map(p => [+p.lat, +p.lon]);
+    L.polyline(latLngs, { color: '#3b82f6', weight: 2, dashArray: '5,5' }).addTo(leafletMap);
+  }
+
+  // Show polygon if 3+ points
+  if (gpsPoints.length > 2) {
+    const latLngs = gpsPoints.map(p => [+p.lat, +p.lon]);
+    L.polygon(latLngs, {
+      color: '#10b981', fillColor: '#10b981', fillOpacity: 0.08, weight: 1.5,
+    }).addTo(leafletMap);
+  }
+}
+
+function centerMapOnPoints() {
+  if (!leafletMap) return;
+  const pts = state.points.filter(p => p.lat && p.lon);
+  if (!pts.length) { toast('No GPS points to fit', 'warn'); return; }
+  const bounds = L.latLngBounds(pts.map(p => [+p.lat, +p.lon]));
+  leafletMap.fitBounds(bounds, { padding: [40, 40] });
+}
+
+// ============================================================
+// 9. PLOT / DRAWING TOOL (Canvas 2D)
+// ============================================================
+function renderPlot() {
+  const c = document.getElementById('mainContent');
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">✏️ Survey Point Plot (2D — Easting/Northing)</div>
+    <div class="flex-end" style="margin-bottom:10px">
+      <button class="btn btn-ghost btn-sm" onclick="clearPlotCanvas()">🗑 Clear</button>
+      <button class="btn btn-primary" onclick="drawSurveyPlot()">🔄 Redraw Points</button>
+    </div>
+    <canvas id="plotCanvas" width="760" height="440"
+      style="width:100%;max-width:760px;height:auto"></canvas>
+    <div class="text-muted" style="font-size:12px;margin-top:8px">
+      Plots points using Easting (X-axis) and Northing (Y-axis). 
+      Points with Easting &amp; Northing values are plotted automatically.
+    </div>
+  </div>`;
+  setTimeout(drawSurveyPlot, 100);
+}
+
+function clearPlotCanvas() {
+  const canvas = document.getElementById('plotCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawSurveyPlot() {
+  const canvas = document.getElementById('plotCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const pts = state.points.filter(p => p.easting !== '' && p.northing !== '');
+
+  if (!pts.length) {
+    ctx.fillStyle = '#64748b';
+    ctx.font = '15px sans-serif';
+    ctx.fillText('No points with Easting/Northing to plot.', 30, 220);
+    ctx.font = '12px sans-serif';
+    ctx.fillText('Add points with Easting and Northing values in the Coordinates section.', 30, 248);
+    return;
+  }
+
+  const pad = 60;
+  const W = canvas.width  - pad * 2;
+  const H = canvas.height - pad * 2;
+
+  const Es = pts.map(p => +p.easting);
+  const Ns = pts.map(p => +p.northing);
+  const minE = Math.min(...Es), maxE = Math.max(...Es);
+  const minN = Math.min(...Ns), maxN = Math.max(...Ns);
+  const rangeE = maxE - minE || 1;
+  const rangeN = maxN - minN || 1;
+
+  const toX = e => pad + ((e - minE) / rangeE) * W;
+  const toY = n => pad + H - ((n - minN) / rangeN) * H;
+
+  // Draw grid
+  ctx.strokeStyle = '#dde4ed'; ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    ctx.beginPath(); ctx.moveTo(pad, pad + i * H / 5); ctx.lineTo(pad + W, pad + i * H / 5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad + i * W / 5, pad); ctx.lineTo(pad + i * W / 5, pad + H); ctx.stroke();
+  }
+
+  // Axes labels
+  ctx.fillStyle = '#64748b'; ctx.font = '11px monospace';
+  for (let i = 0; i <= 5; i++) {
+    const e = (minE + i * rangeE / 5).toFixed(1);
+    const n = (minN + (5 - i) * rangeN / 5).toFixed(1);
+    ctx.fillText(e, pad + i * W / 5 - 15, pad + H + 18);
+    ctx.fillText(n, 2, pad + i * H / 5 + 4);
+  }
+
+  // Axis titles
+  ctx.fillStyle = '#94a3b8'; ctx.font = '12px sans-serif';
+  ctx.fillText('Easting (m)', pad + W / 2 - 30, canvas.height - 5);
+  ctx.save(); ctx.translate(12, pad + H / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Northing (m)', -36, 0); ctx.restore();
+
+  // Draw connecting lines
+  if (pts.length > 1) {
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(toX(+pts[0].easting), toY(+pts[0].northing));
+    pts.slice(1).forEach(p => ctx.lineTo(toX(+p.easting), toY(+p.northing)));
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // Draw area polygon
+  if (state.areaPoints.length > 2) {
+    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.fillStyle = 'rgba(16,185,129,0.05)';
+    ctx.beginPath();
+    ctx.moveTo(toX(state.areaPoints[0].e), toY(state.areaPoints[0].n));
+    state.areaPoints.forEach(p => ctx.lineTo(toX(p.e), toY(p.n)));
+    ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // Draw points
+  pts.forEach((p, i) => {
+    const x = toX(+p.easting), y = toY(+p.northing);
+    // Outer glow
+    ctx.fillStyle = 'rgba(16,185,129,0.2)';
+    ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI * 2); ctx.fill();
+    // Main point
+    ctx.fillStyle = '#10b981';
+    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#065f46'; ctx.lineWidth = 1.5; ctx.stroke();
+    // Label
+    ctx.fillStyle = '#0d2137'; ctx.font = 'bold 11px sans-serif';
+    ctx.fillText(p.name, x + 8, y - 6);
+    if (p.rl) {
+      ctx.fillStyle = '#94a3b8'; ctx.font = '10px sans-serif';
+      ctx.fillText('RL:' + p.rl, x + 8, y + 8);
+    }
+  });
+}
+
+// ============================================================
+// 10. DATA EXPORT
+// ============================================================
+function renderExport() {
+  const c = document.getElementById('mainContent');
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">📤 Data Export</div>
+    <div class="grid2">
+      <!-- CSV EXPORTS -->
+      <div class="card" style="margin:0">
+        <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--accent)">
+          📄 CSV Exports
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-success" onclick="exportCoordCSV()">
+            📍 Export Coordinates CSV (${state.points.length} pts)
+          </button>
+          <button class="btn btn-success" onclick="exportTraverseCSV()">
+            🔄 Export Traverse CSV (${state.traverseRows.length} stations)
+          </button>
+          <button class="btn btn-success" onclick="exportHICSV()">
+            📐 Export HI Leveling CSV (${state.hiRows.length} rows)
+          </button>
+          <button class="btn btn-success" onclick="exportRFCSV()">
+            📐 Export Rise&amp;Fall CSV (${state.rfRows.length} rows)
+          </button>
+          <button class="btn btn-success" onclick="exportLSCSV()">
+            📐 Export Least Squares CSV (${state.lsRows.length} obs)
+          </button>
+          <button class="btn btn-success" onclick="exportAreaCSV()">
+            🗺️ Export Area Points CSV (${state.areaPoints.length} pts)
+          </button>
+        </div>
+      </div>
+
+      <!-- OTHER EXPORTS -->
+      <div class="card" style="margin:0">
+        <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--accent2)">
+          📦 Other Formats
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-primary" onclick="exportAllJSON()">
+            📦 Export All Data as JSON
+          </button>
+          <button class="btn btn-warning" onclick="exportPDFReport()">
+            🖨️ Print / Save PDF Report
+          </button>
+        </div>
+        <div class="info-box" style="margin-top:12px">
+          PDF report opens in a new window — use browser Print → Save as PDF.
+          Includes all coordinates, leveling, traverse, and LS adjustment data.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA PREVIEW -->
+  <div class="card">
+    <div class="card-title">👁 Data Preview</div>
+    <div class="tabs" id="exportPreviewTabs">
+      <button class="tab active" onclick="showExportPreview('coords',this)">Coordinates</button>
+      <button class="tab" onclick="showExportPreview('hi',this)">HI Method</button>
+      <button class="tab" onclick="showExportPreview('ls',this)">Least Squares</button>
+      <button class="tab" onclick="showExportPreview('traverse',this)">Traverse</button>
+    </div>
+    <div id="exportPreviewContent">${buildExportPreview('coords')}</div>
+  </div>`;
+}
+
+function showExportPreview(type, btn) {
+  document.querySelectorAll('#exportPreviewTabs .tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('exportPreviewContent').innerHTML = buildExportPreview(type);
+}
+
+function buildExportPreview(type) {
+  if (type === 'coords') {
+    if (!state.points.length) return '<div class="text-muted" style="padding:8px">No coordinate data</div>';
+    return `<div class="table-wrap"><table>
+      <thead><tr><th>Name</th><th>Lat</th><th>Lon</th><th>Easting</th><th>Northing</th><th>RL</th><th>Desc</th></tr></thead>
+      <tbody>${state.points.map(p=>`<tr>
+        <td><b>${p.name}</b></td><td>${p.lat||'-'}</td><td>${p.lon||'-'}</td>
+        <td>${p.easting||'-'}</td><td>${p.northing||'-'}</td>
+        <td class="text-success">${p.rl||'-'}</td><td>${p.desc||'-'}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+  }
+  if (type === 'hi') {
+    if (!state.hiRows.length) return '<div class="text-muted" style="padding:8px">No HI leveling data</div>';
+    return `<div class="table-wrap"><table>
+      <thead><tr><th>Station</th><th>BS</th><th>IS</th><th>FS</th><th>RL</th><th>Remarks</th></tr></thead>
+      <tbody>${state.hiRows.map(r=>`<tr>
+        <td><b>${r.st}</b></td><td>${r.bs||'-'}</td><td>${r.is||'-'}</td>
+        <td>${r.fs||'-'}</td><td>${r.rl||'-'}</td><td>${r.rem||'-'}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+  }
+  if (type === 'ls') {
+    if (!state.lsRows.length) return '<div class="text-muted" style="padding:8px">No Least Squares data</div>';
+    return `<div class="table-wrap"><table>
+      <thead><tr><th>ID</th><th>From</th><th>To</th><th>Δh (m)</th><th>Dist/Wt</th><th>Known RL</th><th>Closing RL</th><th>Remarks</th></tr></thead>
+      <tbody>${state.lsRows.map(r=>`<tr>
+        <td><b>${r.id}</b></td><td>${r.from}</td><td>${r.to}</td>
+        <td class="font-mono">${r.dh>=0?'+':''}${r.dh.toFixed(4)}</td>
+        <td>${r.dist}</td><td>${r.krl!==''?r.krl:'-'}</td>
+        <td>${r.clrl!==''?r.clrl:'-'}</td><td>${r.rem||'-'}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+  }
+  if (type === 'traverse') {
+    if (!state.traverseRows.length) return '<div class="text-muted" style="padding:8px">No traverse data</div>';
+    return `<div class="table-wrap"><table>
+      <thead><tr><th>Station</th><th>Bearing</th><th>Distance</th></tr></thead>
+      <tbody>${state.traverseRows.map(r=>`<tr>
+        <td><b>${r.st}</b></td><td>${r.bearing}°</td><td>${r.dist} m</td>
+      </tr>`).join('')}</tbody></table></div>`;
+  }
+  return '';
+}
+
+// ---- Download helper ----
+function downloadFile(filename, mimeType, content) {
+  const blob = new Blob([content], { type: mimeType });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+function exportCoordCSV() {
+  if (!state.points.length) { toast('No coordinates to export', 'error'); return; }
+  let csv = 'Point Name,Latitude,Longitude,Easting,Northing,RL,Description\n';
+  state.points.forEach(p =>
+    csv += `${p.name},${p.lat},${p.lon},${p.easting},${p.northing},${p.rl},"${p.desc}"\n`
+  );
+  downloadFile('GEONEXA_Coordinates.csv', 'text/csv', csv);
+  toast('Coordinates exported!', 'success');
+}
+
+function exportTraverseCSV() {
+  if (!state.traverseRows.length) { toast('No traverse data', 'error'); return; }
+  let csv = 'Station,Bearing(deg),Distance(m),Start Easting,Start Northing\n';
+  state.traverseRows.forEach(r =>
+    csv += `${r.st},${r.bearing},${r.dist},${r.se},${r.sn}\n`
+  );
+  downloadFile('GEONEXA_Traverse.csv', 'text/csv', csv);
+  toast('Traverse exported!', 'success');
+}
+
+function exportHICSV() {
+  if (!state.hiRows.length) { toast('No HI leveling data', 'error'); return; }
+  let csv = 'Station,BS,IS,FS,Known RL,Remarks\n';
+  state.hiRows.forEach(r =>
+    csv += `${r.st},${r.bs},${r.is},${r.fs},${r.rl},"${r.rem}"\n`
+  );
+  downloadFile('GEONEXA_HI_Leveling.csv', 'text/csv', csv);
+  toast('HI Leveling exported!', 'success');
+}
+
+function exportRFCSV() {
+  if (!state.rfRows.length) { toast('No Rise/Fall data', 'error'); return; }
+  let csv = 'Station,Staff Reading,Type,Known RL,Remarks\n';
+  state.rfRows.forEach(r =>
+    csv += `${r.st},${r.sr},${r.type},${r.rl},"${r.rem}"\n`
+  );
+  downloadFile('GEONEXA_RiseFall.csv', 'text/csv', csv);
+  toast('Rise & Fall exported!', 'success');
+}
+
+function exportLSCSV() {
+  if (!state.lsRows.length) { toast('No Least Squares data', 'error'); return; }
+  let csv = 'Obs ID,From Station,To Station,Observed Dh(m),Distance/Weight,Weight Type,Known RL,Closing RL,Remarks\n';
+  state.lsRows.forEach(r =>
+    csv += `${r.id},${r.from},${r.to},${r.dh},${r.dist},${r.wtype},${r.krl},${r.clrl},"${r.rem}"\n`
+  );
+  downloadFile('GEONEXA_LeastSquares.csv', 'text/csv', csv);
+  toast('Least Squares data exported!', 'success');
+}
+
+function exportAreaCSV() {
+  if (!state.areaPoints.length) { toast('No area points', 'error'); return; }
+  let csv = 'Point No.,Easting,Northing\n';
+  state.areaPoints.forEach((p, i) => csv += `${i+1},${p.e},${p.n}\n`);
+  downloadFile('GEONEXA_AreaPolygon.csv', 'text/csv', csv);
+  toast('Area polygon exported!', 'success');
+}
+
+function exportAllJSON() {
+  const data = {
+    metadata: {
+      app: 'GEONEXA',
+      project: state.currentProject,
+      exportDate: new Date().toISOString(),
+      version: '1.0',
+    },
+    coordinates:     state.points,
+    levelingHI:      state.hiRows,
+    levelingRF:      state.rfRows,
+    levelingLS:      state.lsRows,
+    traverse:        state.traverseRows,
+    areaPolygon:     state.areaPoints,
+    team:            { members: state.teamMembers, notes: state.teamNotes, tasks: state.teamTasks },
+  };
+  downloadFile('GEONEXA_AllData.json', 'application/json', JSON.stringify(data, null, 2));
+  toast('All data exported as JSON!', 'success');
+}
+
+function exportPDFReport() {
+  const win = window.open('', '_blank');
+  if (!win) { toast('Popup blocked — allow popups for this site', 'error'); return; }
+
+  win.document.write(`<!DOCTYPE html><html><head>
+  <title>GEONEXA — Field Survey Report</title>
+  <style>
+    body{font-family:Arial,sans-serif;padding:24px;color:#111;font-size:13px}
+    h1{color:#1d4ed8;font-size:22px;border-bottom:2px solid #1d4ed8;padding-bottom:6px}
+    h2{color:#0f766e;font-size:15px;border-bottom:1px solid #ccc;padding-bottom:4px;margin-top:20px}
+    h3{font-size:13px;color:#374151;margin-top:14px}
+    table{border-collapse:collapse;width:100%;margin-top:8px}
+    th,td{border:1px solid #d1d5db;padding:5px 8px;text-align:left}
+    th{background:#f3f4f6;font-weight:600;font-size:12px}
+    .meta{display:flex;gap:24px;margin:8px 0;font-size:12px;color:#6b7280}
+    .meta span b{color:#111}
+    .stat{display:inline-block;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:6px 14px;margin:4px;font-size:12px}
+    .stat b{color:#1d4ed8;font-size:16px;display:block}
+    @media print{body{padding:10px}}
+  </style></head><body>
+  <h1>🛰️ GEONEXA — Field Survey Report</h1>
+  <div class="meta">
+    <span><b>Project:</b> ${state.currentProject}</span>
+    <span><b>Date:</b> ${new Date().toLocaleDateString('en-PK')}</span>
+    <span><b>Time:</b> ${new Date().toLocaleTimeString()}</span>
+  </div>
+  <div>
+    <span class="stat"><b>${state.points.length}</b>Survey Points</span>
+    <span class="stat"><b>${state.hiRows.length}</b>HI Records</span>
+    <span class="stat"><b>${state.rfRows.length}</b>RF Records</span>
+    <span class="stat"><b>${state.lsRows.length}</b>LS Observations</span>
+    <span class="stat"><b>${state.traverseRows.length}</b>Traverse Stations</span>
+  </div>
+
+  <h2>📍 Survey Coordinates</h2>
+  ${state.points.length ? `
+  <table><thead><tr><th>#</th><th>Point Name</th><th>Latitude</th><th>Longitude</th>
+    <th>Easting (m)</th><th>Northing (m)</th><th>RL (m)</th><th>Description</th></tr></thead>
+  <tbody>${state.points.map((p,i)=>`<tr>
+    <td>${i+1}</td><td><b>${p.name}</b></td><td>${p.lat||'-'}</td><td>${p.lon||'-'}</td>
+    <td>${p.easting||'-'}</td><td>${p.northing||'-'}</td><td>${p.rl||'-'}</td><td>${p.desc||'-'}</td>
+  </tr>`).join('')}</tbody></table>` : '<p>No coordinate data.</p>'}
+
+  <h2>📐 HI Method Leveling</h2>
+  ${state.hiRows.length ? `
+  <table><thead><tr><th>Station</th><th>BS</th><th>IS</th><th>FS</th><th>Known RL</th><th>Remarks</th></tr></thead>
+  <tbody>${state.hiRows.map(r=>`<tr><td><b>${r.st}</b></td><td>${r.bs||'-'}</td>
+    <td>${r.is||'-'}</td><td>${r.fs||'-'}</td><td>${r.rl||'-'}</td><td>${r.rem||'-'}</td></tr>`).join('')}
+  </tbody></table>` : '<p>No HI leveling data.</p>'}
+
+  <h2>📐 Least Squares Leveling Observations</h2>
+  ${state.lsRows.length ? `
+  <table><thead><tr><th>Obs ID</th><th>From</th><th>To</th><th>Obs Δh (m)</th>
+    <th>Distance/Weight</th><th>Weight Type</th><th>Known RL</th><th>Closing RL</th><th>Remarks</th></tr></thead>
+  <tbody>${state.lsRows.map(r=>`<tr>
+    <td><b>${r.id}</b></td><td>${r.from}</td><td>${r.to}</td>
+    <td>${r.dh>=0?'+':''}${r.dh.toFixed(4)}</td>
+    <td>${r.dist}</td><td>${r.wtype==='distance'?'1/Distance':'Manual'}</td>
+    <td>${r.krl!==''?r.krl:'-'}</td><td>${r.clrl!==''?r.clrl:'-'}</td><td>${r.rem||'-'}</td>
+  </tr>`).join('')}</tbody></table>` : '<p>No Least Squares data.</p>'}
+
+  <h2>🔄 Traverse Survey</h2>
+  ${state.traverseRows.length ? `
+  <table><thead><tr><th>Station</th><th>Bearing (°)</th><th>Distance (m)</th></tr></thead>
+  <tbody>${state.traverseRows.map(r=>`<tr>
+    <td><b>${r.st}</b></td><td>${r.bearing}°</td><td>${r.dist} m</td>
+  </tr>`).join('')}</tbody></table>` : '<p>No traverse data.</p>'}
+
+  <h2>🗺️ Area Polygon Points</h2>
+  ${state.areaPoints.length ? `
+  <table><thead><tr><th>#</th><th>Easting</th><th>Northing</th></tr></thead>
+  <tbody>${state.areaPoints.map((p,i)=>`<tr><td>${i+1}</td><td>${p.e}</td><td>${p.n}</td></tr>`).join('')}
+  </tbody></table>` : '<p>No area polygon data.</p>'}
+
+  <p style="margin-top:30px;color:#9ca3af;font-size:11px;border-top:1px solid #e5e7eb;padding-top:10px">
+    Generated by GEONEXA | ${new Date().toLocaleString()} | All data stored offline in browser localStorage
+  </p>
+  <script>window.onload=()=>window.print();<\/script>
+  </body></html>`);
+  win.document.close();
+}
+
+// ============================================================
+// 11. AI SURVEY CHECK
+// ============================================================
+function renderAICheck() {
+  const c = document.getElementById('mainContent');
+  const warnings = runAIChecks();
+
+  const errorCount   = warnings.filter(w => w.type === 'error').length;
+  const warnCount    = warnings.filter(w => w.type === 'warn').length;
+  const infoCount    = warnings.filter(w => w.type === 'info').length;
+
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">🤖 AI Survey Check Panel</div>
+
+    <div class="info-box" style="margin-bottom:14px">
+      Automatically scans your survey data for errors, inconsistencies, duplicate IDs,
+      missing values, unrealistic entries, and Least Squares misclosure issues.
+      Fix warnings before submitting your report.
+    </div>
+
+    <div class="grid3" style="margin-bottom:16px">
+      <div class="stat-card" style="border:1px solid rgba(239,68,68,0.3)">
+        <div class="stat-val" style="color:var(--accent4)">${errorCount}</div>
+        <div class="stat-lbl">🔴 Errors</div>
+      </div>
+      <div class="stat-card" style="border:1px solid rgba(245,158,11,0.3)">
+        <div class="stat-val" style="color:var(--accent3)">${warnCount}</div>
+        <div class="stat-lbl">🟡 Warnings</div>
+      </div>
+      <div class="stat-card" style="border:1px solid rgba(59,130,246,0.3)">
+        <div class="stat-val" style="color:var(--accent)">${infoCount}</div>
+        <div class="stat-lbl">🔵 Suggestions</div>
+      </div>
+    </div>
+
+    ${warnings.length === 0
+      ? `<div class="success-box" style="font-size:14px">
+          ✅ <b>All Clear!</b> No issues detected. Your survey data looks clean and consistent.
+         </div>`
+      : warnings.map(w => {
+          const boxClass = w.type==='error' ? 'warn-box' : w.type==='warn' ? 'caution-box' : 'info-box';
+          return `<div class="${boxClass}" style="margin-bottom:6px">${w.msg}</div>`;
+        }).join('')}
+
+    <div class="divider"></div>
+    <div style="font-size:13px;color:var(--text2)">
+      <b>Data Summary:</b>
+      ${state.points.length} coordinate points,
+      ${state.hiRows.length} HI rows,
+      ${state.rfRows.length} Rise/Fall rows,
+      ${state.lsRows.length} LS observations,
+      ${state.traverseRows.length} traverse stations,
+      ${state.areaPoints.length} area polygon points
+    </div>
+    <div class="flex-end" style="margin-top:10px">
+      <button class="btn btn-ghost btn-sm" onclick="renderAICheck()">🔄 Re-run Check</button>
+    </div>
+  </div>`;
+}
+
+function runAIChecks() {
+  const warnings = [];
+
+  // ---- Coordinate checks ----
+  state.points.forEach(p => {
+    if (!p.name) warnings.push({type:'error', msg:'🔴 A point is missing a name/ID'});
+    if (!p.easting && !p.lat) warnings.push({type:'warn', msg:`🟡 Point "${p.name}" has no coordinates (Easting or Latitude)`});
+    if (!p.rl) warnings.push({type:'info', msg:`🔵 Point "${p.name}" has no RL/Elevation value`});
+    if (p.lat && (Math.abs(+p.lat) > 90)) warnings.push({type:'error', msg:`🔴 Point "${p.name}" has invalid Latitude (>90°)`});
+    if (p.lon && (Math.abs(+p.lon) > 180)) warnings.push({type:'error', msg:`🔴 Point "${p.name}" has invalid Longitude (>180°)`});
+  });
+
+  // ---- Duplicate point names ----
+  const ptNames = state.points.map(p => p.name);
+  const dupes   = ptNames.filter((n, i) => n && ptNames.indexOf(n) !== i);
+  [...new Set(dupes)].forEach(d =>
+    warnings.push({type:'error', msg:`🔴 Duplicate point name: "${d}"`})
+  );
+
+  // ---- Unrealistic distance jumps ----
+  if (state.points.length > 1) {
+    for (let i = 1; i < state.points.length; i++) {
+      const a = state.points[i-1], b = state.points[i];
+      if (a.easting && b.easting && a.northing && b.northing) {
+        const dist = Math.sqrt((+b.easting-+a.easting)**2 + (+b.northing-+a.northing)**2);
+        if (dist > 50000) warnings.push({type:'warn', msg:`🟡 Large distance jump (${dist.toFixed(0)} m) between "${a.name}" and "${b.name}" — check coordinates`});
+      }
+    }
+  }
+
+  // ---- HI leveling checks ----
+  state.hiRows.forEach(r => {
+    if (!r.st) warnings.push({type:'error', msg:'🔴 HI Method: row missing station name'});
+    if (!r.bs && !r.is && !r.fs) warnings.push({type:'warn', msg:`🟡 HI Method station "${r.st}": no staff readings (BS/IS/FS) entered`});
+  });
+
+  // ---- LS leveling checks ----
+  state.lsRows.forEach((r, i) => {
+    if (!r.id)     warnings.push({type:'error', msg:`🔴 LS Observation #${i+1} missing ID`});
+    if (!r.from)   warnings.push({type:'error', msg:`🔴 LS Obs "${r.id}": missing From Station`});
+    if (!r.to)     warnings.push({type:'error', msg:`🔴 LS Obs "${r.id}": missing To Station`});
+    if (r.from === r.to && r.from) warnings.push({type:'error', msg:`🔴 LS Obs "${r.id}": From and To stations are the same`});
+    if (r.dist <= 0) warnings.push({type:'error', msg:`🔴 LS Obs "${r.id}": distance/weight must be positive (got ${r.dist})`});
+    if (i === 0 && r.krl === '') warnings.push({type:'warn', msg:'🟡 LS Leveling: No known RL for starting benchmark — assumed 100.000 m'});
+  });
+
+  // ---- LS misclosure check ----
+  if (state.lsRows.length > 0) {
+    const clRow = state.lsRows.find(r => r.clrl !== '');
+    if (clRow) {
+      const startRL = state.lsRows[0].krl !== '' ? +state.lsRows[0].krl : 100;
+      const sumDh = state.lsRows.reduce((a, r) => a + r.dh, 0);
+      const misc  = sumDh - (+clRow.clrl - startRL);
+      if (Math.abs(misc) > 0.050) warnings.push({type:'error', msg:`🔴 LS Leveling: Large misclosure = ${misc.toFixed(4)} m (exceeds 50mm tolerance)`});
+      else if (Math.abs(misc) > 0.010) warnings.push({type:'warn', msg:`🟡 LS Leveling: Misclosure = ${misc.toFixed(4)} m (within 50mm but check fieldwork)`});
+    } else {
+      warnings.push({type:'info', msg:'🔵 LS Leveling: No closing benchmark RL provided — misclosure cannot be verified'});
+    }
+  }
+
+  // ---- Traverse checks ----
+  state.traverseRows.forEach(r => {
+    if (!r.st) warnings.push({type:'error', msg:'🔴 Traverse: station missing name'});
+    if (!r.dist || r.dist <= 0) warnings.push({type:'warn', msg:`🟡 Traverse station "${r.st}": distance is zero or negative`});
+    if (r.bearing < 0 || r.bearing > 360) warnings.push({type:'error', msg:`🔴 Traverse station "${r.st}": bearing must be 0–360° (got ${r.bearing})`});
+  });
+
+  // ---- Area polygon check ----
+  if (state.areaPoints.length > 0 && state.areaPoints.length < 3) {
+    warnings.push({type:'warn', msg:`🟡 Area Calculator: polygon has only ${state.areaPoints.length} point(s) — need at least 3 for area calculation`});
+  }
+
+  return warnings;
+}
+
+// ============================================================
+// 12. WEATHER (Placeholder — connect API here)
+// ============================================================
+function renderWeather() {
+  const c = document.getElementById('mainContent');
+  /*
+    TO CONNECT REAL WEATHER DATA:
+    1. Get a free API key from https://openweathermap.org/api
+    2. Replace demo values by calling:
+       fetch(`https://api.openweathermap.org/data/2.5/weather?q=Lahore,PK&appid=YOUR_KEY&units=metric`)
+       .then(r => r.json()).then(data => { ... use data.main.temp, data.wind.speed, etc. })
+    3. Insert real values into the stat cards below
+  */
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">🌤️ Field Weather Conditions</div>
+    <div class="caution-box" style="margin-bottom:16px">
+      ⚠️ Demo data shown. Connect OpenWeatherMap API key in the code to get live weather.
+      See code comments in <code>renderWeather()</code> for instructions.
+    </div>
+
+    <div class="grid3" style="margin-bottom:16px">
+      <div class="stat-card">
+        <div style="font-size:40px;margin-bottom:8px">🌤️</div>
+        <div class="stat-val" style="color:var(--accent3)">28°C</div>
+        <div class="stat-lbl">Temperature</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">Feels like 31°C</div>
+        <div style="font-size:12px;color:var(--accent2)">Partly Cloudy</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:40px;margin-bottom:8px">💨</div>
+        <div class="stat-val" style="color:var(--accent)">12 km/h</div>
+        <div class="stat-lbl">Wind Speed</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">NW Direction</div>
+        <div style="font-size:12px;color:var(--accent2)">Light Breeze</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:40px;margin-bottom:8px">🌧️</div>
+        <div class="stat-val" style="color:var(--accent4)">20%</div>
+        <div class="stat-lbl">Rain Probability</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:6px">Humidity: 65%</div>
+        <div style="font-size:12px;color:var(--accent2)">Low Risk</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="stat-card">
+        <div style="font-size:28px;margin-bottom:4px">☀️</div>
+        <div style="font-size:13px;font-weight:600">Visibility: 10 km</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">Excellent for field work</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:28px;margin-bottom:4px">⏱️</div>
+        <div style="font-size:13px;font-weight:600">UV Index: 7 (High)</div>
+        <div style="font-size:12px;color:var(--accent3);margin-top:4px">Use sunscreen & hat</div>
+      </div>
+    </div>
+
+    <div class="success-box" style="margin-top:16px">
+      ✅ <b>Field Survey Recommendation:</b> Current conditions are suitable for field surveying.
+      Wind speed is within acceptable limits. Rain probability is low.
+      Proceed with planned field operations. Wear UV protection.
+    </div>
+
+    <div class="divider"></div>
+    <div style="font-size:12px;color:var(--text3)">
+      <b>API Integration:</b> Use OpenWeatherMap free tier → 
+      <code>https://api.openweathermap.org/data/2.5/weather?q=CITY&appid=API_KEY&units=metric</code>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// 13. TEAM COLLABORATION
+// ============================================================
+function renderTeam() {
+  const c = document.getElementById('mainContent');
+  const roleChip = { Admin:'chip-red', Surveyor:'chip-blue', Viewer:'chip-amber' };
+
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">👥 Team Collaboration</div>
+    <div class="info-box" style="margin-bottom:16px">
+      Currently in <b>Local Offline Mode</b> — data saved to localStorage.
+      Code is structured for Firebase/backend integration (see comments in source).
+    </div>
+
+    <div class="grid2">
+      <!-- TEAM MEMBERS -->
+      <div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:12px">Team Members</div>
+        ${state.teamMembers.map((m, i) => `
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#f4f7fa;border-radius:var(--radius2);margin-bottom:8px;border:1px solid var(--border)">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--aqua-light);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--accent);flex-shrink:0">
+            ${m.name.split(' ').map(n=>n[0]).join('')}
+          </div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:13px">${m.name}</div>
+            <span class="chip ${roleChip[m.role]}">${m.role}</span>
+          </div>
+          <div style="font-size:12px;color:${m.status==='online'?'var(--accent2)':'var(--text3)'}">
+            ● ${m.status}
+          </div>
+        </div>`).join('')}
+
+        <!-- Add member (offline only) -->
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <input class="inp" id="newMemberName" placeholder="Member name" style="flex:1">
+          <select class="inp" id="newMemberRole" style="width:110px">
+            <option>Surveyor</option><option>Admin</option><option>Viewer</option>
+          </select>
+          <button class="btn btn-success btn-sm" onclick="addTeamMember()">+</button>
+        </div>
+      </div>
+
+      <!-- TASK CHECKLIST -->
+      <div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:12px">Task Checklist</div>
+        ${state.teamTasks.map((t, i) => `
+        <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#f4f7fa;border-radius:var(--radius2);margin-bottom:6px;border:1px solid var(--border)">
+          <input type="checkbox" ${t.done?'checked':''} style="width:16px;height:16px;cursor:pointer"
+            onchange="state.teamTasks[${i}].done=this.checked;saveState();renderTeam()">
+          <span style="${t.done?'text-decoration:line-through;color:var(--text3);':''}font-size:13px;flex:1">${t.text}</span>
+          <button class="btn btn-ghost btn-sm" style="color:var(--accent4);padding:2px 6px"
+            onclick="state.teamTasks.splice(${i},1);saveState();renderTeam()">✕</button>
+        </div>`).join('')}
+
+        <div style="display:flex;gap:6px;margin-top:10px">
+          <input class="inp" id="newTaskInp" placeholder="Add new task..." style="flex:1">
+          <button class="btn btn-success btn-sm" onclick="addTeamTask()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SHARED NOTES -->
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px">📝 Shared Project Notes</div>
+    <textarea class="inp" rows="5" placeholder="Write shared notes, field observations, survey remarks..."
+      oninput="state.teamNotes=this.value;saveState()">${state.teamNotes}</textarea>
+  </div>`;
+}
+
+function addTeamMember() {
+  const name = document.getElementById('newMemberName').value.trim();
+  const role = document.getElementById('newMemberRole').value;
+  if (!name) { toast('Enter member name', 'error'); return; }
+  state.teamMembers.push({ name, role, status: 'offline' });
+  saveState(); renderTeam();
+  toast(`${name} added to team`, 'success');
+}
+
+function addTeamTask() {
+  const text = document.getElementById('newTaskInp').value.trim();
+  if (!text) return;
+  state.teamTasks.push({ text, done: false });
+  saveState(); renderTeam();
+}
+
+// ============================================================
+// 14. CONTOUR MAPPING (Basic Visualization)
+// ============================================================
+function renderContour() {
+  const c = document.getElementById('mainContent');
+  const elevPts = state.points.filter(p => p.easting && p.northing && p.rl);
+
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-title">🏔️ Contour / Elevation Visualization</div>
+    <div class="info-box" style="margin-bottom:14px">
+      Basic elevation color map using saved survey points with Easting, Northing, and RL values.
+      Full contour line generation requires triangulation algorithms (TIN/Delaunay) — 
+      add D3.js contour library for full implementation.
+    </div>
+
+    <div style="font-size:13px;margin-bottom:12px;color:var(--text2)">
+      Points with elevation data: <b class="text-success">${elevPts.length}</b>
+    </div>
+
+    <canvas id="contourCanvas" width="760" height="440"
+      style="width:100%;max-width:760px;height:auto;border:1px solid var(--border);border-radius:var(--radius2)">
+    </canvas>
+
+    <div class="result-box" style="margin-top:14px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px">Elevation Statistics</div>
+      ${elevPts.length >= 2 ? `
+      <div class="result-row"><span>Min Elevation</span><span class="result-val">${Math.min(...elevPts.map(p=>+p.rl)).toFixed(3)} m</span></div>
+      <div class="result-row"><span>Max Elevation</span><span class="result-val">${Math.max(...elevPts.map(p=>+p.rl)).toFixed(3)} m</span></div>
+      <div class="result-row"><span>Range</span><span class="result-val">${(Math.max(...elevPts.map(p=>+p.rl))-Math.min(...elevPts.map(p=>+p.rl))).toFixed(3)} m</span></div>
+      <div class="result-row"><span>Average RL</span><span class="result-val">${(elevPts.reduce((a,p)=>a+(+p.rl),0)/elevPts.length).toFixed(3)} m</span></div>
+      ` : '<div class="text-muted" style="padding:4px">Add points with RL values to see elevation stats</div>'}
+    </div>
+  </div>`;
+
+  setTimeout(() => drawContourMap(elevPts), 100);
+}
+
+function drawContourMap(pts) {
+  const canvas = document.getElementById('contourCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background
+  ctx.fillStyle = '#f8fbfe';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (!pts.length) {
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px sans-serif';
+    ctx.fillText('No elevation data. Add points with Easting, Northing, and RL values.', 30, 220);
+    return;
+  }
+
+  const pad  = 60;
+  const W    = canvas.width  - pad * 2;
+  const H    = canvas.height - pad * 2;
+  const Es   = pts.map(p => +p.easting);
+  const Ns   = pts.map(p => +p.northing);
+  const RLs  = pts.map(p => +p.rl);
+  const minE = Math.min(...Es), maxE = Math.max(...Es);
+  const minN = Math.min(...Ns), maxN = Math.max(...Ns);
+  const minRL= Math.min(...RLs), maxRL = Math.max(...RLs);
+  const rlRange = maxRL - minRL || 1;
+
+  const toX  = e => pad + ((e-minE)/(maxE-minE||1)) * W;
+  const toY  = n => pad + H - ((n-minN)/(maxN-minN||1)) * H;
+
+  // Elevation color: blue (low) → green → yellow → red (high)
+  function elevColor(rl) {
+    const t = (rl - minRL) / rlRange;
+    const r = Math.round(t < 0.5 ? t*2*255 : 255);
+    const g = Math.round(t < 0.5 ? 200 : (1-t)*2*200);
+    const b = Math.round(t < 0.5 ? (1-t*2)*200 : 0);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  // Draw "elevation heatmap" — filled circles
+  pts.forEach(p => {
+    const x   = toX(+p.easting), y = toY(+p.northing);
+    const col = elevColor(+p.rl);
+    const rad = 30;
+    const grad = ctx.createRadialGradient(x,y,0, x,y,rad);
+    grad.addColorStop(0, col + '');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(x,y,rad,0,Math.PI*2); ctx.fill();
+  });
+
+  // Draw point markers + labels
+  pts.forEach(p => {
+    const x = toX(+p.easting), y = toY(+p.northing);
+    ctx.fillStyle = elevColor(+p.rl);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(x,y,6,0,Math.PI*2); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = '#0d2137';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.fillText(p.name, x+8, y-5);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '10px monospace';
+    ctx.fillText('RL:'+p.rl, x+8, y+8);
+  });
+
+  // Legend
+  const lgW = 120, lgH = 12;
+  const lgX = canvas.width - pad - lgW, lgY = pad - 20;
+  const grad = ctx.createLinearGradient(lgX,0,lgX+lgW,0);
+  grad.addColorStop(0, elevColor(minRL));
+  grad.addColorStop(0.5, elevColor((minRL+maxRL)/2));
+  grad.addColorStop(1, elevColor(maxRL));
+  ctx.fillStyle = grad;
+  ctx.fillRect(lgX, lgY, lgW, lgH);
+  ctx.strokeStyle = '#b0c4d8'; ctx.lineWidth = 1;
+  ctx.strokeRect(lgX, lgY, lgW, lgH);
+  ctx.fillStyle = '#94a3b8'; ctx.font = '10px sans-serif';
+  ctx.fillText(minRL.toFixed(1)+'m', lgX, lgY+26);
+  ctx.fillText(maxRL.toFixed(1)+'m', lgX+lgW-30, lgY+26);
+  ctx.fillText('Elevation', lgX+35, lgY-4);
+}
+
+// ============================================================
+// INITIALIZE APPLICATION
+// ============================================================
+renderNav();
+renderPage();
+
+// Mark offline ready
+document.getElementById('offline-badge').style.background = 'var(--accent2)';
+</script>
+</body>
+</html>
